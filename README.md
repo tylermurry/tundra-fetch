@@ -11,7 +11,7 @@ There are two main uses for the client:
 This client is built to intercept all uses of the fetch library and forward them to the Tundra server to be recorded for offline use. To do this, we need to initialize the interceptor when the application starts up and direct it to our server:
 
 ```
-import Tundra from 'tundra-fetch'
+import * as Tundra from 'tundra-fetch'
 ...
 function someAppInitFunction() {
     Tundra.interceptFetchCalls(8080);
@@ -27,7 +27,7 @@ After a profile has been captured, you now have an offline data store that can b
 When and where you decide to load the profile is up to the specific needs of your application. However, getting the traffic from the profile to replay during the test execution is as simple as:
 
 ```
-import Tundra from 'tundra-fetch'
+import * as Tundra from 'tundra-fetch'
 ...
 loadProfile() {
     Tundra.replayProfile(require("./fixtures/profiles/scenario1.json"));
