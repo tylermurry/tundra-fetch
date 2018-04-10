@@ -1,0 +1,29 @@
+{
+  "name": "tundra-fetch",
+  "version": "1.0.0",
+  "description": "Tundra-fetch is a client for the Tundra server that assist with offline test data management specifically for projects using the fetch http library",
+  "main": "index.js",
+  "keywords": [
+    "tundra",
+    "tundra-cli",
+    "tundra-fetch",
+    "fetch",
+    "mock",
+    "interceptor",
+    "intercept"
+  ],
+  "author": "Tyler Murry",
+  "license": "MIT",
+  "dependencies": {
+    "fetch-mock": "^6.3.0",
+    "lodash.escaperegexp": "^4.1.2",
+    "node-fetch": "^2.1.2",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
