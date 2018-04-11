@@ -2,7 +2,7 @@
 Tundra-fetch is Javascript-based client for the [Tundra server](https://github.com/tylermurry/tundra-cli) that helps  with offline test data management - specifically for projects using the fetch http library.
 
 ### Installing the Client
-`npm install --save tundra-fetch`
+`npm install --save-dev tundra-fetch`
 
 ### Using the Client
 There are two main uses for the client:
