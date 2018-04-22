@@ -8,10 +8,14 @@ export function replayProfile(profileRequests) {
 
     profileRequests.forEach(({request, response}) => {
         fetchMock.mock((url, opts) => {
-            let urlMatches = new RegExp(`^(https?://)?(www\\.)?${escapeRegExp(request.url)}$`, 'g').test(url);
-            let bodyMatches = opts ? opts.body === request.content : true;
-            let headersMatch = opts ? JSON.stringify(opts.headers) === JSON.stringify(request.headers) : true;
-            let methodMatches = opts ? opts.method === request.method: true;
+
+            let actualOpts = opts ? opts : url;
+            let actualUrl = opts ? url : url.url;
+
+            let urlMatches = new RegExp(`^(https?://)?(www\\.)?${escapeRegExp(request.url)}$`, 'g').test(actualUrl);
+            let bodyMatches = actualOpts ? actualOpts.body === request.content : true;
+            let headersMatch = actualOpts ? JSON.stringify(actualOpts.headers) === JSON.stringify(request.headers) : true;
+            let methodMatches = actualOpts ? actualOpts.method === request.method: true;
 
             return urlMatches && methodMatches && bodyMatches && headersMatch;
         }, {

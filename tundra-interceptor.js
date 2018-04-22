@@ -4,6 +4,7 @@ export function interceptFetchCalls(port) {
 
         // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
         const actualUrl = config ? url: url.url;
+        config = config ? config : url;
 
         return _fetch.apply(this, arguments).then(async function(data) {
             try {

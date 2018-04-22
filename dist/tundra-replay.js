@@ -26,10 +26,14 @@ function replayProfile(profileRequests) {
             response = _ref.response;
 
         _fetchMock2.default.mock(function (url, opts) {
-            var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(url);
-            var bodyMatches = opts ? opts.body === request.content : true;
-            var headersMatch = opts ? JSON.stringify(opts.headers) === JSON.stringify(request.headers) : true;
-            var methodMatches = opts ? opts.method === request.method : true;
+
+            var actualOpts = opts ? opts : url;
+            var actualUrl = opts ? url : url.url;
+
+            var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
+            var bodyMatches = actualOpts ? actualOpts.body === request.content : true;
+            var headersMatch = actualOpts ? JSON.stringify(actualOpts.headers) === JSON.stringify(request.headers) : true;
+            var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
             return urlMatches && methodMatches && bodyMatches && headersMatch;
         }, {
