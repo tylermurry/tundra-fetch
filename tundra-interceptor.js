@@ -1,10 +1,14 @@
 export function interceptFetchCalls(port) {
     let _fetch = global.fetch;
     global.fetch = function(url, config) {
+
+        // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
+        const actualUrl = config ? url: url.url;
+
         return _fetch.apply(this, arguments).then(async function(data) {
             try {
                 const responseBody = await data.clone().json();
-                await submitRequestData(_fetch, url, config, data, responseBody, port);
+                await submitRequestData(_fetch, actualUrl, config, data, responseBody, port);
             } catch (error) {
                 console.log('Error wiretapping fetch request');
                 console.log(error);

@@ -55,6 +55,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 function interceptFetchCalls(port) {
     var _fetch = global.fetch;
     global.fetch = function (url, config) {
+
+        // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
+        var actualUrl = config ? url : url.url;
+
         return _fetch.apply(this, arguments).then(function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data) {
                 var responseBody;
@@ -69,7 +73,7 @@ function interceptFetchCalls(port) {
                             case 3:
                                 responseBody = _context.sent;
                                 _context.next = 6;
-                                return submitRequestData(_fetch, url, config, data, responseBody, port);
+                                return submitRequestData(_fetch, actualUrl, config, data, responseBody, port);
 
                             case 6:
                                 _context.next = 12;
