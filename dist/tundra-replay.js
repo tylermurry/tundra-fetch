@@ -15,9 +15,13 @@ var _lodash = require('lodash.escaperegexp');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _lodash3 = require('lodash.omit');
+
+var _lodash4 = _interopRequireDefault(_lodash3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function replayProfile(profileRequests) {
+function replayProfile(profileRequests, headersToOmit) {
 
     _fetchMock2.default.reset();
 
@@ -32,7 +36,7 @@ function replayProfile(profileRequests) {
 
             var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
             var bodyMatches = actualOpts ? actualOpts.body === request.content : true;
-            var headersMatch = actualOpts ? JSON.stringify(actualOpts.headers) === JSON.stringify(request.headers) : true;
+            var headersMatch = actualOpts ? JSON.stringify((0, _lodash4.default)(actualOpts.headers, headersToOmit)) === JSON.stringify((0, _lodash4.default)(request.headers, headersToOmit)) : true;
             var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
             return urlMatches && methodMatches && bodyMatches && headersMatch;

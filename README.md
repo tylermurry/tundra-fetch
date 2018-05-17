@@ -11,13 +11,11 @@ There are two main uses for the client:
 This client is built to intercept all uses of the fetch library and forward them to the Tundra server to be recorded for offline use. To do this, we need to initialize the interceptor when the application starts up and direct it to our server:
 
 ```
-import * as Tundra from 'tundra-fetch'
-...
 function someAppInitFunction() {
-    Tundra.interceptFetchCalls(8080);
+    require('tundra-fetch')Tundra.interceptFetchCalls(9090);
 }
 ```
-Port `8080` in this case is completely configurable based on what port we start our server on.
+Port `9090` in this case is completely configurable based on what port we start our server on.
 
 The idea is to only enable this code before running a manual test of the app, so *ensure that you remove this before going to production or is toggled off for a production build*
 
@@ -27,10 +25,10 @@ After a profile has been captured, you now have an offline data store that can b
 When and where you decide to load the profile is up to the specific needs of your application. However, getting the traffic from the profile to replay during the test execution is as simple as:
 
 ```
-import * as Tundra from 'tundra-fetch'
+import {replayProfile} from 'tundra-fetch'
 ...
 loadProfile() {
-    Tundra.replayProfile(require("./fixtures/profiles/scenario1.json"));
+    replayProfile(require("./fixtures/profiles/scenario1.json"));
 }
 ```
 ### Working Example and More
