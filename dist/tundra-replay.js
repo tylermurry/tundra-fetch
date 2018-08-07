@@ -19,7 +19,24 @@ var _lodash3 = require('lodash.omit');
 
 var _lodash4 = _interopRequireDefault(_lodash3);
 
+var _matcher = require('matcher');
+
+var _matcher2 = _interopRequireDefault(_matcher);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var WILDCARD_MARKER_ESCAPED = '{{\\*}}';
+
+var stringIsSimilarTo = function stringIsSimilarTo(source, target) {
+
+    if (source && target) {
+        var wildcardedSource = source.replace(new RegExp((0, _lodash2.default)('*'), 'g'), '\\*').replace(new RegExp((0, _lodash2.default)(WILDCARD_MARKER_ESCAPED), 'g'), '*');
+
+        return _matcher2.default.isMatch(target, wildcardedSource);
+    } else {
+        return source === target;
+    }
+};
 
 function replayProfile(profileRequests, headersToOmit) {
 
@@ -35,7 +52,7 @@ function replayProfile(profileRequests, headersToOmit) {
             var actualUrl = opts ? url : url.url;
 
             var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
-            var bodyMatches = actualOpts ? actualOpts.body === request.content : true;
+            var bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
             var headersMatch = actualOpts ? JSON.stringify((0, _lodash4.default)(actualOpts.headers, headersToOmit)) === JSON.stringify((0, _lodash4.default)(request.headers, headersToOmit)) : true;
             var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 

@@ -31,7 +31,36 @@ loadProfile() {
     replayProfile(require("./fixtures/profiles/scenario1.json"));
 }
 ```
+
+#### Using Wildcards to Match Requests
+There are times when an application will post dynamic data to an endpoint so that the body will not be *exactly* the same each time (ex. including the current date in the request body). For these scenarios, Tundra provides a special wildcard syntax to allow request bodies to be fuzzy-matched.
+
+For example, let's say you have a profile with the following layout after capturing a request:
+```
+[
+  {
+    "request": {
+      "url": "https://www.someapi.com/user",
+      "headers": { ... }
+      },
+      "method": "POST",
+      "content": "{\"name\":\"John Doe\",\"created\":1533654607}"
+    },
+    "response": { ... }
+  }
+]
+```
+In this case, the `created` property in the content is just the current date, so this will change from request to request. To get around this, you can use `{{*}}`, which acts like a traditional wildcard matcher:
+```
+...
+"content": "{\"name\":\"John Doe\",\"created\":{{*}}}"
+...
+```
+
+Now the request will be matched, no matter what the value of `created` is.
+
 ### Working Example and More
 The best way to understand this tool is to see is used in context. For a full, working example look at react-native-tundra (coming soon).
 
-Additionally, it may be helpful to read the article on Cold Storage Testing (coming soon) to get the philosophy behind this library and what it's intent is.
+Additionally, it may be helpful to read this article on offline testing for the philosophy behind why Tundra was created: [Test your mobile app offline for lightning fast, reliable automation](https://medium.com/@tylermurry/test-your-mobile-app-offline-for-lightning-fast-reliable-automation-ec579d007dd7)
+
