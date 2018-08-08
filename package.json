@@ -12,6 +12,10 @@
     "interceptor",
     "intercept"
   ],
+  "scripts": {
+    "lint": "eslint .",
+    "validate": "npm run lint"
+  },
   "author": "Tyler Murry",
   "license": "MIT",
   "dependencies": {
@@ -27,6 +31,9 @@
     "url": "^0.11.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0"
+    "babel-cli": "^6.26.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
   }
 }

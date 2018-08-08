@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 exports.replayProfile = replayProfile;
 
@@ -25,46 +25,45 @@ var _matcher2 = _interopRequireDefault(_matcher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var WILDCARD_MARKER_ESCAPED = '{{\\*}}';
+var WILDCARD_MARKER_ESCAPED = '{{\\*}}'; /* eslint-disable import/prefer-default-export */
 
 var stringIsSimilarTo = function stringIsSimilarTo(source, target) {
+  if (source && target) {
+    var wildcardedSource = source.replace(new RegExp((0, _lodash2.default)('*'), 'g'), '\\*').replace(new RegExp((0, _lodash2.default)(WILDCARD_MARKER_ESCAPED), 'g'), '*');
 
-    if (source && target) {
-        var wildcardedSource = source.replace(new RegExp((0, _lodash2.default)('*'), 'g'), '\\*').replace(new RegExp((0, _lodash2.default)(WILDCARD_MARKER_ESCAPED), 'g'), '*');
+    return _matcher2.default.isMatch(target, wildcardedSource);
+  }
 
-        return _matcher2.default.isMatch(target, wildcardedSource);
-    } else {
-        return source === target;
-    }
+  return source === target;
 };
 
 function replayProfile(profileRequests, headersToOmit) {
+  _fetchMock2.default.reset();
 
-    _fetchMock2.default.reset();
+  profileRequests.forEach(function (_ref) {
+    var request = _ref.request,
+        response = _ref.response;
 
-    profileRequests.forEach(function (_ref) {
-        var request = _ref.request,
-            response = _ref.response;
+    _fetchMock2.default.mock(function (url, opts) {
+      var actualOpts = opts || url;
+      var actualUrl = opts ? url : url.url;
+      var actualOptsHeaders = JSON.stringify((0, _lodash4.default)(actualOpts.headers, headersToOmit));
+      var actualRequestHeaders = JSON.stringify((0, _lodash4.default)(request.headers, headersToOmit));
 
-        _fetchMock2.default.mock(function (url, opts) {
+      var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
+      var bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
+      var headersMatch = actualOpts ? actualOptsHeaders === actualRequestHeaders : true;
+      var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
-            var actualOpts = opts ? opts : url;
-            var actualUrl = opts ? url : url.url;
-
-            var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
-            var bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
-            var headersMatch = actualOpts ? JSON.stringify((0, _lodash4.default)(actualOpts.headers, headersToOmit)) === JSON.stringify((0, _lodash4.default)(request.headers, headersToOmit)) : true;
-            var methodMatches = actualOpts ? actualOpts.method === request.method : true;
-
-            return urlMatches && methodMatches && bodyMatches && headersMatch;
-        }, {
-            body: response.content,
-            headers: response.headers,
-            status: response.statusCode
-        }, {
-            name: request.method + ' ' + request.url,
-            overwriteRoutes: false
-        });
+      return urlMatches && methodMatches && bodyMatches && headersMatch;
+    }, {
+      body: response.content,
+      headers: response.headers,
+      status: response.statusCode
+    }, {
+      name: request.method + ' ' + request.url,
+      overwriteRoutes: false
     });
+  });
 }
 //# sourceMappingURL=tundra-replay.js.map

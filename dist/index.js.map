@@ -1,1 +1,1 @@
-{"version":3,"sources":["../index.js"],"names":["replayProfile","interceptFetchCalls"],"mappings":";;;;;;;;;;;yBAASA,a;;;;;;;;;8BACAC,mB","file":"index.js","sourcesContent":["export { replayProfile } from \"./tundra-replay\";\nexport { interceptFetchCalls } from \"./tundra-interceptor\";"]}
+{"version":3,"sources":["../index.js"],"names":["replayProfile","interceptFetchCalls"],"mappings":";;;;;;;;;;;yBAASA,a;;;;;;;;;8BACAC,mB","file":"index.js","sourcesContent":["export { replayProfile } from './tundra-replay';\nexport { interceptFetchCalls } from './tundra-interceptor';\n"]}

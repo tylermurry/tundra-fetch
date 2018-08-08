@@ -1,48 +1,48 @@
+/* eslint-disable import/prefer-default-export */
+
 import 'url';
 import fetchMock from 'fetch-mock';
 import escapeRegExp from 'lodash.escaperegexp';
 import omit from 'lodash.omit';
-import matcher from "matcher";
+import matcher from 'matcher';
 
 const WILDCARD_MARKER_ESCAPED = '{{\\*}}';
 
 const stringIsSimilarTo = (source, target) => {
+  if (source && target) {
+    const wildcardedSource = source
+      .replace(new RegExp(escapeRegExp('*'), 'g'), '\\*')
+      .replace(new RegExp(escapeRegExp(WILDCARD_MARKER_ESCAPED), 'g'), '*');
 
-    if (source && target) {
-        let wildcardedSource = source
-            .replace(new RegExp(escapeRegExp('*'), 'g'), '\\*')
-            .replace(new RegExp(escapeRegExp(WILDCARD_MARKER_ESCAPED), 'g'), '*');
+    return matcher.isMatch(target, wildcardedSource);
+  }
 
-        return matcher.isMatch(target, wildcardedSource);
-    }
-    else {
-        return source === target;
-    }
+  return source === target;
 };
 
 export function replayProfile(profileRequests, headersToOmit) {
+  fetchMock.reset();
 
-    fetchMock.reset();
+  profileRequests.forEach(({ request, response }) => {
+    fetchMock.mock((url, opts) => {
+      const actualOpts = opts || url;
+      const actualUrl = opts ? url : url.url;
+      const actualOptsHeaders = JSON.stringify(omit(actualOpts.headers, headersToOmit));
+      const actualRequestHeaders = JSON.stringify(omit(request.headers, headersToOmit));
 
-    profileRequests.forEach(({request, response}) => {
-        fetchMock.mock((url, opts) => {
+      const urlMatches = new RegExp(`^(https?://)?(www\\.)?${escapeRegExp(request.url)}$`, 'g').test(actualUrl);
+      const bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
+      const headersMatch = actualOpts ? actualOptsHeaders === actualRequestHeaders : true;
+      const methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
-            let actualOpts = opts ? opts : url;
-            let actualUrl = opts ? url : url.url;
-
-            let urlMatches = new RegExp(`^(https?://)?(www\\.)?${escapeRegExp(request.url)}$`, 'g').test(actualUrl);
-            let bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
-            let headersMatch = actualOpts ? JSON.stringify(omit(actualOpts.headers, headersToOmit)) === JSON.stringify(omit(request.headers, headersToOmit)) : true;
-            let methodMatches = actualOpts ? actualOpts.method === request.method: true;
-
-            return urlMatches && methodMatches && bodyMatches && headersMatch;
-        }, {
-            body: response.content,
-            headers: response.headers,
-            status: response.statusCode
-        },{
-            name: `${request.method} ${request.url}`,
-            overwriteRoutes: false
-        })
+      return urlMatches && methodMatches && bodyMatches && headersMatch;
+    }, {
+      body: response.content,
+      headers: response.headers,
+      status: response.statusCode,
+    }, {
+      name: `${request.method} ${request.url}`,
+      overwriteRoutes: false,
     });
+  });
 }
