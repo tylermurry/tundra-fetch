@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import 'url';
 import fetchMock from 'fetch-mock';
 import escapeRegExp from 'lodash.escaperegexp';
@@ -20,7 +18,7 @@ const stringIsSimilarTo = (source, target) => {
   return source === target;
 };
 
-export function replayProfile(profileRequests, headersToOmit) {
+export default (profileRequests, headersToOmit) => {
   fetchMock.reset();
 
   profileRequests.forEach(({ request, response }) => {
@@ -45,4 +43,4 @@ export function replayProfile(profileRequests, headersToOmit) {
       overwriteRoutes: false,
     });
   });
-}
+};

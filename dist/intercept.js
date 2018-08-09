@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-/* eslint-disable import/prefer-default-export */
-
 var submitRequestData = function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(_fetch, requestURL, requestConfig, response, responseBody, port) {
     var capturedRequest, request;
@@ -49,20 +47,16 @@ var submitRequestData = function () {
   };
 }();
 
-exports.interceptFetchCalls = interceptFetchCalls;
-
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-function interceptFetchCalls(port) {
-  var _this = this;
-
+exports.default = function (port) {
   var originalfetch = global.fetch;
   global.fetch = function (url, config) {
     // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
     var actualUrl = config ? url : url.url;
     var actualConfig = config || url;
 
-    return originalfetch.apply(_this).then(function () {
+    return originalfetch.apply(undefined).then(function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data) {
         var responseBody;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
@@ -97,7 +91,7 @@ function interceptFetchCalls(port) {
                 return _context2.stop();
             }
           }
-        }, _callee2, _this, [[0, 8]]);
+        }, _callee2, undefined, [[0, 8]]);
       }));
 
       return function (_x7) {
@@ -105,5 +99,5 @@ function interceptFetchCalls(port) {
       };
     }());
   };
-}
-//# sourceMappingURL=tundra-interceptor.js.map
+};
+//# sourceMappingURL=intercept.js.map

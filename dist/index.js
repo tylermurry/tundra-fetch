@@ -3,22 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.interceptFetchCalls = exports.replayProfile = undefined;
 
-var _tundraReplay = require('./tundra-replay');
+var _replay = require('./replay');
 
-Object.defineProperty(exports, 'replayProfile', {
-  enumerable: true,
-  get: function get() {
-    return _tundraReplay.replayProfile;
-  }
-});
+var _replay2 = _interopRequireDefault(_replay);
 
-var _tundraInterceptor = require('./tundra-interceptor');
+var _intercept = require('./intercept');
 
-Object.defineProperty(exports, 'interceptFetchCalls', {
-  enumerable: true,
-  get: function get() {
-    return _tundraInterceptor.interceptFetchCalls;
-  }
-});
+var _intercept2 = _interopRequireDefault(_intercept);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var replayProfile = exports.replayProfile = _replay2.default;
+var interceptFetchCalls = exports.interceptFetchCalls = _intercept2.default;
 //# sourceMappingURL=index.js.map

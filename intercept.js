@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 async function submitRequestData(_fetch, requestURL, requestConfig, response, responseBody, port) {
   const capturedRequest = {
     request: {
@@ -24,7 +22,7 @@ async function submitRequestData(_fetch, requestURL, requestConfig, response, re
   request.send(JSON.stringify(capturedRequest));
 }
 
-export function interceptFetchCalls(port) {
+export default (port) => {
   const originalfetch = global.fetch;
   global.fetch = (url, config) => {
     // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
@@ -43,4 +41,4 @@ export function interceptFetchCalls(port) {
       return data;
     });
   };
-}
+};

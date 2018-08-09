@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.replayProfile = replayProfile;
 
 require('url');
 
@@ -25,7 +24,7 @@ var _matcher2 = _interopRequireDefault(_matcher);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var WILDCARD_MARKER_ESCAPED = '{{\\*}}'; /* eslint-disable import/prefer-default-export */
+var WILDCARD_MARKER_ESCAPED = '{{\\*}}';
 
 var stringIsSimilarTo = function stringIsSimilarTo(source, target) {
   if (source && target) {
@@ -37,7 +36,7 @@ var stringIsSimilarTo = function stringIsSimilarTo(source, target) {
   return source === target;
 };
 
-function replayProfile(profileRequests, headersToOmit) {
+exports.default = function (profileRequests, headersToOmit) {
   _fetchMock2.default.reset();
 
   profileRequests.forEach(function (_ref) {
@@ -65,5 +64,5 @@ function replayProfile(profileRequests, headersToOmit) {
       overwriteRoutes: false
     });
   });
-}
-//# sourceMappingURL=tundra-replay.js.map
+};
+//# sourceMappingURL=replay.js.map
