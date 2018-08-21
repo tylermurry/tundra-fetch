@@ -12,7 +12,7 @@ This client is built to intercept all uses of the fetch library and forward them
 
 ```
 function someAppInitFunction() {
-    require('tundra-fetch')Tundra.interceptFetchCalls(9090);
+    require('tundra-fetch').interceptFetchCalls(9090);
 }
 ```
 Port `9090` in this case is completely configurable based on what port we start our server on.
