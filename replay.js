@@ -22,7 +22,8 @@ export default (profileRequests, headersToOmit) => {
   fetchMock.reset();
 
   profileRequests.forEach(({ request, response }) => {
-    fetchMock.mock((url, opts) => {
+
+    const matchingFunction = (url, opts) => {
       const actualOpts = opts || url;
       const actualUrl = opts ? url : url.url;
       const actualOptsHeaders = JSON.stringify(omit(actualOpts.headers, headersToOmit));
@@ -34,13 +35,19 @@ export default (profileRequests, headersToOmit) => {
       const methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
       return urlMatches && methodMatches && bodyMatches && headersMatch;
-    }, {
+    };
+
+    const responseOptions = {
       body: response.content,
       headers: response.headers,
       status: response.statusCode,
-    }, {
+    };
+
+    const fetchMockConfig = {
       name: `${request.method} ${request.url}`,
       overwriteRoutes: false,
-    });
+    };
+
+    fetchMock.mock(matchingFunction, responseOptions, fetchMockConfig);
   });
 };

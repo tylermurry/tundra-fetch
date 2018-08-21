@@ -43,7 +43,8 @@ exports.default = function (profileRequests, headersToOmit) {
     var request = _ref.request,
         response = _ref.response;
 
-    _fetchMock2.default.mock(function (url, opts) {
+
+    var matchingFunction = function matchingFunction(url, opts) {
       var actualOpts = opts || url;
       var actualUrl = opts ? url : url.url;
       var actualOptsHeaders = JSON.stringify((0, _lodash4.default)(actualOpts.headers, headersToOmit));
@@ -55,14 +56,20 @@ exports.default = function (profileRequests, headersToOmit) {
       var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
       return urlMatches && methodMatches && bodyMatches && headersMatch;
-    }, {
+    };
+
+    var responseOptions = {
       body: response.content,
       headers: response.headers,
       status: response.statusCode
-    }, {
+    };
+
+    var fetchMockConfig = {
       name: request.method + ' ' + request.url,
       overwriteRoutes: false
-    });
+    };
+
+    _fetchMock2.default.mock(matchingFunction, responseOptions, fetchMockConfig);
   });
 };
 //# sourceMappingURL=replay.js.map
