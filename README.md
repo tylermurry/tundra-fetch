@@ -12,7 +12,7 @@ This client is built to intercept all uses of the fetch library and forward them
 
 ```
 function someAppInitFunction() {
-    require('tundra-fetch')Tundra.interceptFetchCalls(9090);
+    require('tundra-fetch').interceptFetchCalls(9090);
 }
 ```
 Port `9090` in this case is completely configurable based on what port we start our server on.
@@ -31,6 +31,23 @@ loadProfile() {
     replayProfile(require("./fixtures/profiles/scenario1.json"));
 }
 ```
+
+##### Customizing Replay Behavior
+For finer-grained control over replay functionality, you may specify an optional `config` parameter. For example:
+
+```
+const config = {
+  repeatMode: 'last'
+}
+
+replayProfile(require("./fixtures/profiles/scenario1.json", config));
+```
+###### Config options:
+
+| Option | Description |
+| ------ | ------ |
+| headersToOmit | An array of header keys to ignore (ex. `['Accept-Encoding', 'User-Agent']`)|
+| repeatMode | `errorAfterLast` (default): Replay exactly as recorded but throw an error for further requests<br>`first`: Always repeat the first recorded response<br>`last`: Replay exactly as recorded and then repeat the last request forever
 
 #### Using Wildcards to Match Requests
 There are times when an application will post dynamic data to an endpoint so that the body will not be *exactly* the same each time (ex. including the current date in the request body). For these scenarios, Tundra provides a special wildcard syntax to allow request bodies to be fuzzy-matched.

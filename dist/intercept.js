@@ -52,11 +52,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 exports.default = function (port) {
   var originalfetch = global.fetch;
   global.fetch = function (url, config) {
+    var _this = this;
+
     // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
     var actualUrl = config ? url : url.url;
     var actualConfig = config || url;
 
-    return originalfetch.apply(undefined).then(function () {
+    return originalfetch.apply(this, arguments).then(function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data) {
         var responseBody;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
@@ -91,7 +93,7 @@ exports.default = function (port) {
                 return _context2.stop();
             }
           }
-        }, _callee2, undefined, [[0, 8]]);
+        }, _callee2, _this, [[0, 8]]);
       }));
 
       return function (_x7) {

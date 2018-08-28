@@ -24,12 +24,12 @@ async function submitRequestData(_fetch, requestURL, requestConfig, response, re
 
 export default (port) => {
   const originalfetch = global.fetch;
-  global.fetch = (url, config) => {
+  global.fetch = function (url, config) {
     // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
     const actualUrl = config ? url : url.url;
     const actualConfig = config || url;
 
-    return originalfetch.apply(this).then(async (data) => {
+    return originalfetch.apply(this, arguments).then(async (data) => { // eslint-disable-line prefer-rest-params
       try {
         const responseBody = await data.clone().json();
         await submitRequestData(originalfetch, actualUrl, actualConfig, data, responseBody, port);

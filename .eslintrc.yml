@@ -2,3 +2,8 @@ extends: airbnb-base
 
 env:
   jest: true
+
+rules:
+  max-len:
+  - warn
+  - code: 120
