@@ -71,22 +71,22 @@ var buildFetchMockConfig = function buildFetchMockConfig(request, config, repeat
 
   if (repeatMode === 'FIRST') {
     return baseConfig;
-  } else {
-    var _repeatMap$buildReque = repeatMap[buildRequestId(request)],
-        invocations = _repeatMap$buildReque.invocations,
-        repeated = _repeatMap$buildReque.repeated;
-
-
-    if (invocations >= repeated) {
-      if (repeatMode === 'LAST') {
-        return baseConfig;
-      }
-    }
-
-    baseConfig['repeat'] = 1;
-
-    return baseConfig;
   }
+
+  var _repeatMap$buildReque = repeatMap[buildRequestId(request)],
+      invocations = _repeatMap$buildReque.invocations,
+      repeated = _repeatMap$buildReque.repeated;
+
+
+  if (invocations >= repeated) {
+    if (repeatMode === 'LAST') {
+      return baseConfig;
+    }
+  }
+
+  baseConfig.repeat = 1;
+
+  return baseConfig;
 };
 
 exports.default = function (profileRequests, config) {

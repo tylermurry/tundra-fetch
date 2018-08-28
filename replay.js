@@ -18,24 +18,21 @@ const stringIsSimilarTo = (source, target) => {
   return source === target;
 };
 
-const buildRequestId = (request) => {
-  return `${request.method} ${request.url}`;
-};
+const buildRequestId = request => `${request.method} ${request.url}`;
 
 const buildRequestRepeatMap = (requests) => {
-  let repeatMap = [];
+  const repeatMap = [];
 
-  requests.forEach(({request}) => {
+  requests.forEach(({ request }) => {
     const requestId = buildRequestId(request);
 
     if (requestId in repeatMap) {
       repeatMap[requestId].repeated += 1;
-    }
-    else {
+    } else {
       repeatMap[requestId] = {
         repeated: 1,
         invocations: 0,
-      }
+      };
     }
   });
 
@@ -53,19 +50,18 @@ const buildFetchMockConfig = (request, config, repeatMap) => {
   if (repeatMode === 'FIRST') {
     return baseConfig;
   }
-  else {
-    const { invocations, repeated } = repeatMap[buildRequestId(request)];
 
-    if (invocations >= repeated) {
-      if (repeatMode === 'LAST') {
-        return baseConfig;
-      }
+  const { invocations, repeated } = repeatMap[buildRequestId(request)];
+
+  if (invocations >= repeated) {
+    if (repeatMode === 'LAST') {
+      return baseConfig;
     }
-
-    baseConfig['repeat'] = 1;
-
-    return baseConfig;
   }
+
+  baseConfig.repeat = 1;
+
+  return baseConfig;
 };
 
 export default (profileRequests, config) => {
@@ -73,7 +69,7 @@ export default (profileRequests, config) => {
 
   const repeatMap = buildRequestRepeatMap(profileRequests);
 
-  profileRequests.forEach(({request, response}) => {
+  profileRequests.forEach(({ request, response }) => {
     const requestRepeatMap = repeatMap[buildRequestId(request)];
     requestRepeatMap.invocations += 1;
 
