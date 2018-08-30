@@ -1,20 +1,9 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.interceptFetchCalls = exports.replayProfile = undefined;
+/* eslint-disable global-require */
 
-var _replay = require('./replay');
-
-var _replay2 = _interopRequireDefault(_replay);
-
-var _intercept = require('./intercept');
-
-var _intercept2 = _interopRequireDefault(_intercept);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var replayProfile = exports.replayProfile = _replay2.default;
-var interceptFetchCalls = exports.interceptFetchCalls = _intercept2.default;
+module.exports = {
+  replayProfile: require('./dist/replay').default,
+  interceptFetchCalls: require('./dist/intercept').default
+};
 //# sourceMappingURL=index.js.map
