@@ -1,5 +1,6 @@
-import replay from './replay';
-import intercept from './intercept';
+/* eslint-disable global-require */
 
-export const replayProfile = replay;
-export const interceptFetchCalls = intercept;
+module.exports = {
+  replayProfile: require('./dist/replay').default,
+  interceptFetchCalls: require('./dist/intercept').default,
+};
