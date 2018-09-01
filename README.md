@@ -1,4 +1,8 @@
 # Tundra-Fetch
+![license-MIT](https://img.shields.io/badge/license-MIT-brightgreen.svg)
+[![npm version](https://badge.fury.io/js/tundra-fetch.svg)](https://badge.fury.io/js/tundra-fetch)
+[![CircleCI](https://circleci.com/gh/tylermurry/tundra-fetch.svg?style=shield)](https://circleci.com/gh/tylermurry/tundra-fetch)
+
 Tundra-fetch is Javascript-based client for the [Tundra server](https://github.com/tylermurry/tundra-cli) that helps  with offline test data management - specifically for projects using the fetch http library.
 
 ### Installing the Client
