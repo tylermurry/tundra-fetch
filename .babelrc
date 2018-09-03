@@ -1,5 +1,3 @@
 {
-  "ignore": [
-    "**/*.test.js"
-  ]
+  "presets": ["env"]
 }

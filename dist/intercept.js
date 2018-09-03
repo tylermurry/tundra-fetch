@@ -14,9 +14,9 @@ var submitRequestData = function () {
             capturedRequest = {
               request: {
                 url: requestURL,
-                headers: requestConfig ? requestConfig.headers : undefined,
-                method: requestConfig ? requestConfig.method : 'GET',
-                content: requestConfig ? requestConfig.body : undefined
+                headers: requestConfig.headers,
+                method: requestConfig.method,
+                content: requestConfig.body
               },
               response: {
                 headers: response.headers.map,
@@ -47,16 +47,26 @@ var submitRequestData = function () {
   };
 }();
 
+var _fetchArgumentExtractor = require('./fetchArgumentExtractor');
+
+var _fetchArgumentExtractor2 = _interopRequireDefault(_fetchArgumentExtractor);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 exports.default = function (port) {
   var originalfetch = global.fetch;
-  global.fetch = function (url, config) {
+  global.fetch = function interceptFetch() {
     var _this = this;
 
-    // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
-    var actualUrl = config ? url : url.url;
-    var actualConfig = config || url;
+    for (var _len = arguments.length, fetchParams = Array(_len), _key = 0; _key < _len; _key++) {
+      fetchParams[_key] = arguments[_key];
+    }
+
+    var _extractFetchArgument = (0, _fetchArgumentExtractor2.default)(fetchParams),
+        url = _extractFetchArgument.url,
+        config = _extractFetchArgument.config;
 
     return originalfetch.apply(this, arguments).then(function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(data) {
@@ -72,7 +82,7 @@ exports.default = function (port) {
               case 3:
                 responseBody = _context2.sent;
                 _context2.next = 6;
-                return submitRequestData(originalfetch, actualUrl, actualConfig, data, responseBody, port);
+                return submitRequestData(originalfetch, url, config, data, responseBody, port);
 
               case 6:
                 _context2.next = 12;
