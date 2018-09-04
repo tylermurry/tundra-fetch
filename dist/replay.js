@@ -18,87 +18,34 @@ var _lodash3 = require('lodash.omit');
 
 var _lodash4 = _interopRequireDefault(_lodash3);
 
-var _matcher = require('matcher');
+var _requestIdBuilder = require('./requestIdBuilder');
 
-var _matcher2 = _interopRequireDefault(_matcher);
+var _requestIdBuilder2 = _interopRequireDefault(_requestIdBuilder);
+
+var _stringSimilarity = require('./stringSimilarity');
+
+var _stringSimilarity2 = _interopRequireDefault(_stringSimilarity);
+
+var _fetchMockConfigBuilder = require('./fetchMockConfigBuilder');
+
+var _fetchMockConfigBuilder2 = _interopRequireDefault(_fetchMockConfigBuilder);
+
+var _requestRepeatMapBuilder = require('./requestRepeatMapBuilder');
+
+var _requestRepeatMapBuilder2 = _interopRequireDefault(_requestRepeatMapBuilder);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var WILDCARD_MARKER_ESCAPED = '{{\\*}}';
-
-var stringIsSimilarTo = function stringIsSimilarTo(source, target) {
-  if (source && target) {
-    var wildcardedSource = source.replace(new RegExp((0, _lodash2.default)('*'), 'g'), '\\*').replace(new RegExp((0, _lodash2.default)(WILDCARD_MARKER_ESCAPED), 'g'), '*');
-
-    return _matcher2.default.isMatch(target, wildcardedSource);
-  }
-
-  return source === target;
-};
-
-var buildRequestId = function buildRequestId(request) {
-  return request.method + ' ' + request.url;
-};
-
-var buildRequestRepeatMap = function buildRequestRepeatMap(requests) {
-  var repeatMap = [];
-
-  requests.forEach(function (_ref) {
-    var request = _ref.request;
-
-    var requestId = buildRequestId(request);
-
-    if (requestId in repeatMap) {
-      repeatMap[requestId].repeated += 1;
-    } else {
-      repeatMap[requestId] = {
-        repeated: 1,
-        invocations: 0
-      };
-    }
-  });
-
-  return repeatMap;
-};
-
-var buildFetchMockConfig = function buildFetchMockConfig(request, config, repeatMap) {
-  var baseConfig = {
-    name: buildRequestId(request),
-    overwriteRoutes: false
-  };
-
-  var repeatMode = config.repeatMode && config.repeatMode.toUpperCase();
-
-  if (repeatMode === 'FIRST') {
-    return baseConfig;
-  }
-
-  var _repeatMap$buildReque = repeatMap[buildRequestId(request)],
-      invocations = _repeatMap$buildReque.invocations,
-      repeated = _repeatMap$buildReque.repeated;
-
-
-  if (invocations >= repeated) {
-    if (repeatMode === 'LAST') {
-      return baseConfig;
-    }
-  }
-
-  baseConfig.repeat = 1;
-
-  return baseConfig;
-};
 
 exports.default = function (profileRequests, config) {
   _fetchMock2.default.reset();
 
-  var repeatMap = buildRequestRepeatMap(profileRequests);
+  var repeatMap = (0, _requestRepeatMapBuilder2.default)(profileRequests);
 
-  profileRequests.forEach(function (_ref2) {
-    var request = _ref2.request,
-        response = _ref2.response;
+  profileRequests.forEach(function (_ref) {
+    var request = _ref.request,
+        response = _ref.response;
 
-    var requestRepeatMap = repeatMap[buildRequestId(request)];
+    var requestRepeatMap = repeatMap[(0, _requestIdBuilder2.default)(request)];
     requestRepeatMap.invocations += 1;
 
     var matchingFunction = function matchingFunction(url, opts) {
@@ -108,7 +55,7 @@ exports.default = function (profileRequests, config) {
       var actualRequestHeaders = JSON.stringify((0, _lodash4.default)(request.headers, config.headersToOmit));
 
       var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
-      var bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
+      var bodyMatches = actualOpts ? (0, _stringSimilarity2.default)(request.content, actualOpts.body) : true;
       var headersMatch = actualOpts ? actualOptsHeaders === actualRequestHeaders : true;
       var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
@@ -121,7 +68,7 @@ exports.default = function (profileRequests, config) {
       status: response.statusCode
     };
 
-    _fetchMock2.default.mock(matchingFunction, responseOptions, buildFetchMockConfig(request, config, repeatMap));
+    _fetchMock2.default.mock(matchingFunction, responseOptions, (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap));
   });
 };
 //# sourceMappingURL=replay.js.map

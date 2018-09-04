@@ -2,67 +2,10 @@ import 'url';
 import fetchMock from 'fetch-mock';
 import escapeRegExp from 'lodash.escaperegexp';
 import omit from 'lodash.omit';
-import matcher from 'matcher';
-
-const WILDCARD_MARKER_ESCAPED = '{{\\*}}';
-
-const stringIsSimilarTo = (source, target) => {
-  if (source && target) {
-    const wildcardedSource = source
-      .replace(new RegExp(escapeRegExp('*'), 'g'), '\\*')
-      .replace(new RegExp(escapeRegExp(WILDCARD_MARKER_ESCAPED), 'g'), '*');
-
-    return matcher.isMatch(target, wildcardedSource);
-  }
-
-  return source === target;
-};
-
-const buildRequestId = request => `${request.method} ${request.url}`;
-
-const buildRequestRepeatMap = (requests) => {
-  const repeatMap = [];
-
-  requests.forEach(({ request }) => {
-    const requestId = buildRequestId(request);
-
-    if (requestId in repeatMap) {
-      repeatMap[requestId].repeated += 1;
-    } else {
-      repeatMap[requestId] = {
-        repeated: 1,
-        invocations: 0,
-      };
-    }
-  });
-
-  return repeatMap;
-};
-
-const buildFetchMockConfig = (request, config, repeatMap) => {
-  const baseConfig = {
-    name: buildRequestId(request),
-    overwriteRoutes: false,
-  };
-
-  const repeatMode = config.repeatMode && config.repeatMode.toUpperCase();
-
-  if (repeatMode === 'FIRST') {
-    return baseConfig;
-  }
-
-  const { invocations, repeated } = repeatMap[buildRequestId(request)];
-
-  if (invocations >= repeated) {
-    if (repeatMode === 'LAST') {
-      return baseConfig;
-    }
-  }
-
-  baseConfig.repeat = 1;
-
-  return baseConfig;
-};
+import buildRequestId from './requestIdBuilder';
+import stringIsSimilarTo from './stringSimilarity';
+import buildFetchMockConfig from './fetchMockConfigBuilder';
+import buildRequestRepeatMap from './requestRepeatMapBuilder';
 
 export default (profileRequests, config) => {
   fetchMock.reset();
