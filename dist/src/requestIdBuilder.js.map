@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/requestIdBuilder.js"],"names":["request","method","url"],"mappings":";;;;;;kBAAe;AAAA,SAAcA,QAAQC,MAAtB,SAAgCD,QAAQE,GAAxC;AAAA,C","file":"requestIdBuilder.js","sourcesContent":["export default request => `${request.method} ${request.url}`;\n"]}
