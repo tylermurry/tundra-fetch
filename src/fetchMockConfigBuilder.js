@@ -6,7 +6,7 @@ export default (request, config, repeatMap) => {
     overwriteRoutes: false,
   };
 
-  const repeatMode = config.repeatMode && config.repeatMode.toUpperCase();
+  const repeatMode = config && config.repeatMode && config.repeatMode.toUpperCase();
 
   if (repeatMode === 'FIRST') {
     return baseConfig;

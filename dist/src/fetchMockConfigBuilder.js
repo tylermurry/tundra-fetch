@@ -16,7 +16,7 @@ exports.default = function (request, config, repeatMap) {
     overwriteRoutes: false
   };
 
-  var repeatMode = config.repeatMode && config.repeatMode.toUpperCase();
+  var repeatMode = config && config.repeatMode && config.repeatMode.toUpperCase();
 
   if (repeatMode === 'FIRST') {
     return baseConfig;
