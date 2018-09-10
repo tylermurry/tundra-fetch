@@ -17,7 +17,7 @@ describe('fetchMockConfigBuilder', () => {
     // repeatMap[buildRequestId(request)].invocations=
 
     expect(fetchMockConfigBuilder(request, null, repeatMap)).toEqual({
-      name: 'GET http://some.url',
+      name: 215916126,
       overwriteRoutes: false,
       repeat: 1,
     });
@@ -29,7 +29,7 @@ describe('fetchMockConfigBuilder', () => {
     const config = { repeatMode: 'first' };
 
     expect(fetchMockConfigBuilder(request, config, repeatMap)).toEqual({
-      name: 'GET http://some.url',
+      name: 215916126,
       overwriteRoutes: false,
     });
   });
@@ -40,7 +40,7 @@ describe('fetchMockConfigBuilder', () => {
     const config = { repeatMode: 'last' };
 
     expect(fetchMockConfigBuilder(request, config, repeatMap)).toEqual({
-      name: 'GET http://some.url',
+      name: 215916126,
       overwriteRoutes: false,
       repeat: 1,
     });
@@ -54,7 +54,7 @@ describe('fetchMockConfigBuilder', () => {
     repeatMap[buildRequestId(request)].invocations = 3;
 
     expect(fetchMockConfigBuilder(request, config, repeatMap)).toEqual({
-      name: 'GET http://some.url',
+      name: 215916126,
       overwriteRoutes: false,
     });
   });

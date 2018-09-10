@@ -5,6 +5,6 @@ describe('requestIdBuilder', () => {
     expect(requestIdBuilder({
       method: 'GET',
       url: 'http://some.url',
-    })).toBe('GET http://some.url');
+    })).toBe(215916126);
   });
 });
