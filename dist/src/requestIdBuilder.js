@@ -5,6 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 exports.default = function (request) {
-  return request.method + " " + request.url;
+  return hashCode().value(request.method + " " + JSON.stringify(request.headers) + " " + request.url);
 };
 //# sourceMappingURL=requestIdBuilder.js.map
