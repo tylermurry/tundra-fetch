@@ -3,6 +3,7 @@ import fetchMock from 'fetch-mock';
 import escapeRegExp from 'lodash.escaperegexp';
 import omit from 'lodash.omit';
 import matcher from 'matcher';
+import { hashCode } from 'hashcode';
 
 const WILDCARD_MARKER_ESCAPED = '{{\\*}}';
 
@@ -18,7 +19,7 @@ const stringIsSimilarTo = (source, target) => {
   return source === target;
 };
 
-const buildRequestId = request => `${request.method} ${request.url}`;
+const buildRequestId = request => hashCode().value(`${request.method} ${JSON.stringify(request.headers)} ${request.url}`);
 
 const buildRequestRepeatMap = (requests) => {
   const repeatMap = [];

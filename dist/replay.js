@@ -22,6 +22,8 @@ var _matcher = require('matcher');
 
 var _matcher2 = _interopRequireDefault(_matcher);
 
+var _hashcode = require('hashcode');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var WILDCARD_MARKER_ESCAPED = '{{\\*}}';
@@ -37,7 +39,7 @@ var stringIsSimilarTo = function stringIsSimilarTo(source, target) {
 };
 
 var buildRequestId = function buildRequestId(request) {
-  return request.method + ' ' + request.url;
+  return (0, _hashcode.hashCode)().value(request.method + ' ' + JSON.stringify(request.headers) + ' ' + request.url);
 };
 
 var buildRequestRepeatMap = function buildRequestRepeatMap(requests) {
