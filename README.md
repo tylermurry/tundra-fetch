@@ -14,7 +14,7 @@ There are two main uses for the client:
 #### Intercepting Fetch Calls
 This client is built to intercept all uses of the fetch library and forward them to the Tundra server to be recorded for offline use. To do this, we need to initialize the interceptor when the application starts up and direct it to our server:
 
-```
+```javascript
 function someAppInitFunction() {
     require('tundra-fetch').interceptFetchCalls(9090);
 }
@@ -28,7 +28,7 @@ After a profile has been captured, you now have an offline data store that can b
 
 When and where you decide to load the profile is up to the specific needs of your application. However, getting the traffic from the profile to replay during the test execution is as simple as:
 
-```
+```javascript
 import {replayProfile} from 'tundra-fetch'
 ...
 loadProfile() {
@@ -39,7 +39,7 @@ loadProfile() {
 ##### Customizing Replay Behavior
 For finer-grained control over replay functionality, you may specify an optional `config` parameter. For example:
 
-```
+```javascript
 const config = {
   repeatMode: 'last'
 }
@@ -57,7 +57,7 @@ replayProfile(require("./fixtures/profiles/scenario1.json", config));
 There are times when an application will post dynamic data to an endpoint so that the body will not be *exactly* the same each time (ex. including the current date in the request body). For these scenarios, Tundra provides a special wildcard syntax to allow request bodies to be fuzzy-matched.
 
 For example, let's say you have a profile with the following layout after capturing a request:
-```
+```javascript
 [
   {
     "request": {
@@ -72,7 +72,7 @@ For example, let's say you have a profile with the following layout after captur
 ]
 ```
 In this case, the `created` property in the content is just the current date, so this will change from request to request. To get around this, you can use `{{*}}`, which acts like a traditional wildcard matcher:
-```
+```javascript
 ...
 "content": "{\"name\":\"John Doe\",\"created\":{{*}}}"
 ...
