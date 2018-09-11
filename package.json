@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "jest",
+    "test": "jest && codecov",
     "validate": "npm run lint && npm run test"
   },
   "repository": {
@@ -39,6 +39,7 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "codecov": "^3.1.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
@@ -51,6 +52,8 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/dist/"
-    ]
+    ],
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
