@@ -1,10 +1,12 @@
+import extractFetchArguments from './fetchArgumentExtractor';
+
 async function submitRequestData(_fetch, requestURL, requestConfig, response, responseBody, port) {
   const capturedRequest = {
     request: {
       url: requestURL,
-      headers: requestConfig ? requestConfig.headers : undefined,
-      method: requestConfig ? requestConfig.method : 'GET',
-      content: requestConfig ? requestConfig.body : undefined,
+      headers: requestConfig.headers,
+      method: requestConfig.method,
+      content: requestConfig.body,
     },
     response: {
       headers: response.headers.map,
@@ -24,15 +26,13 @@ async function submitRequestData(_fetch, requestURL, requestConfig, response, re
 
 export default (port) => {
   const originalfetch = global.fetch;
-  global.fetch = function (url, config) {
-    // This accounts for times when fetch is called with just the configuration - e.g. fetch(config)
-    const actualUrl = config ? url : url.url;
-    const actualConfig = config || url;
+  global.fetch = function interceptFetch(...fetchParams) {
+    const { url, config } = extractFetchArguments(fetchParams);
 
     return originalfetch.apply(this, arguments).then(async (data) => { // eslint-disable-line prefer-rest-params
       try {
         const responseBody = await data.clone().json();
-        await submitRequestData(originalfetch, actualUrl, actualConfig, data, responseBody, port);
+        await submitRequestData(originalfetch, url, config, data, responseBody, port);
       } catch (error) {
         console.error('Error wiretapping fetch request');
         console.error(error);

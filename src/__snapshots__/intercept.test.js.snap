@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`intercept should intercept a POST fetch with a json body 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "{\\"request\\":{\\"url\\":\\"http://someurl.com\\",\\"headers\\":{\\"some\\":\\"header\\"},\\"method\\":\\"POST\\",\\"content\\":{\\"some\\":\\"request body\\"}},\\"response\\":{\\"statusCode\\":200,\\"content\\":{\\"data\\":\\"abc123\\"}}}",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`intercept should intercept a plain url 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "{\\"request\\":{\\"url\\":\\"http://someurl.com\\",\\"method\\":\\"GET\\"},\\"response\\":{\\"statusCode\\":200,\\"content\\":{\\"data\\":\\"abc123\\"}}}",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`intercept should intercept a url with custom options 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "{\\"request\\":{\\"url\\":\\"http://someurl.com\\",\\"headers\\":{\\"some\\":\\"header\\"},\\"method\\":\\"GET\\"},\\"response\\":{\\"statusCode\\":200,\\"content\\":{\\"data\\":\\"abc123\\"}}}",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
