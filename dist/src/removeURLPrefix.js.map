@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/removeURLPrefix.js"],"names":["url","replace"],"mappings":";;;;;;kBAAe;AAAA,SAAQA,MAAMA,IAAIC,OAAJ,CAAY,yBAAZ,EAAuC,EAAvC,CAAN,GAAmD,IAA3D;AAAA,C","file":"removeURLPrefix.js","sourcesContent":["export default url => (url ? url.replace(/^(https?:\\/\\/)?(www\\.)?/, '') : null);\n"]}
