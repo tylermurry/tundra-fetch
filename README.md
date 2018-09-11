@@ -55,7 +55,11 @@ replayProfile(require("./fixtures/profiles/scenario1.json", config));
 | repeatMode | `errorAfterLast` (default): Replay exactly as recorded but throw an error for further requests<br>`first`: Always repeat the first recorded response<br>`last`: Replay exactly as recorded and then repeat the last request forever
 
 #### Using Wildcards to Match Requests
-There are times when an application will post dynamic data to an endpoint so that the body will not be *exactly* the same each time (ex. including the current date in the request body). For these scenarios, Tundra provides a special wildcard syntax to allow request bodies to be fuzzy-matched.
+There are times when an application will use dynamic data and the body, headers or url will not be *exactly* the same each time (ex. including the current date in the request body).
+
+For these scenarios, Tundra provides a special wildcard syntax to allow requests to be fuzzy-matched:
+
+##### Matching the Body
 
 For example, let's say you have a profile with the following layout after capturing a request:
 ```javascript
@@ -80,6 +84,25 @@ In this case, the `created` property in the content is just the current date, so
 ```
 
 Now the request will be matched, no matter what the value of `created` is.
+
+##### Matching the URL
+
+```javascript
+...
+"url": "https://www.someapi.com/user?created={{*}}&name=John"
+...
+```
+
+##### Matching Headers
+
+```javascript
+...
+"headers": {
+  "SomeHeader": "Wildcards can be {{*}} anywhere"
+  ...
+ }
+...
+```
 
 ### Working Example and More
 The best way to understand this tool is to see is used in context. For a full, working example look at react-native-tundra (coming soon).
