@@ -37,11 +37,11 @@ describe('stringSimilarity', function () {
     expect((0, _stringSimilarity2.default)('', 'something')).toBe(false);
   });
 
-  it('should match an empty target against a nwildcarded source', function () {
+  it('should match an empty target against a wildcarded source', function () {
     expect((0, _stringSimilarity2.default)('' + WILDCARD, '')).toBe(true);
   });
 
-  it('should match an null target against a nwildcarded source', function () {
+  it('should match an null target against a wildcarded source', function () {
     expect((0, _stringSimilarity2.default)('' + WILDCARD, null)).toBe(true);
   });
 
@@ -51,6 +51,10 @@ describe('stringSimilarity', function () {
 
   it('should not match if the source and target are undefined and null', function () {
     expect((0, _stringSimilarity2.default)(null, undefined)).toBe(false);
+  });
+
+  it('should not match if the source and target are undefined and null', function () {
+    expect((0, _stringSimilarity2.default)(null, 'something')).toBe(false);
   });
 });
 //# sourceMappingURL=stringSimilarity.test.js.map

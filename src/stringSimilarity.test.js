@@ -31,11 +31,11 @@ describe('stringSimilarity', () => {
     expect(stringSimilarity('', 'something')).toBe(false);
   });
 
-  it('should match an empty target against a nwildcarded source', () => {
+  it('should match an empty target against a wildcarded source', () => {
     expect(stringSimilarity(`${WILDCARD}`, '')).toBe(true);
   });
 
-  it('should match an null target against a nwildcarded source', () => {
+  it('should match an null target against a wildcarded source', () => {
     expect(stringSimilarity(`${WILDCARD}`, null)).toBe(true);
   });
 
@@ -45,5 +45,9 @@ describe('stringSimilarity', () => {
 
   it('should not match if the source and target are undefined and null', () => {
     expect(stringSimilarity(null, undefined)).toBe(false);
+  });
+
+  it('should not match if the source and target are undefined and null', () => {
+    expect(stringSimilarity(null, 'something')).toBe(false);
   });
 });
