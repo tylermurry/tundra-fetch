@@ -11,22 +11,24 @@ var _requestIdBuilder2 = _interopRequireDefault(_requestIdBuilder);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = function (requests) {
-  var repeatMap = [];
+  var repeatMap = {};
 
-  requests.forEach(function (_ref) {
-    var request = _ref.request;
+  if (requests) {
+    requests.forEach(function (_ref) {
+      var request = _ref.request;
 
-    var requestId = (0, _requestIdBuilder2.default)(request);
+      var requestId = (0, _requestIdBuilder2.default)(request);
 
-    if (requestId in repeatMap) {
-      repeatMap[requestId].repeated += 1;
-    } else {
-      repeatMap[requestId] = {
-        repeated: 1,
-        invocations: 0
-      };
-    }
-  });
+      if (requestId in repeatMap) {
+        repeatMap[requestId].repeated += 1;
+      } else {
+        repeatMap[requestId] = {
+          repeated: 1,
+          invocations: 0
+        };
+      }
+    });
+  }
 
   return repeatMap;
 };

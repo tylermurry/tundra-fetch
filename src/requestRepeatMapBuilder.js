@@ -1,20 +1,22 @@
 import buildRequestId from './requestIdBuilder';
 
 export default (requests) => {
-  const repeatMap = [];
+  const repeatMap = {};
 
-  requests.forEach(({ request }) => {
-    const requestId = buildRequestId(request);
+  if (requests) {
+    requests.forEach(({ request }) => {
+      const requestId = buildRequestId(request);
 
-    if (requestId in repeatMap) {
-      repeatMap[requestId].repeated += 1;
-    } else {
-      repeatMap[requestId] = {
-        repeated: 1,
-        invocations: 0,
-      };
-    }
-  });
+      if (requestId in repeatMap) {
+        repeatMap[requestId].repeated += 1;
+      } else {
+        repeatMap[requestId] = {
+          repeated: 1,
+          invocations: 0,
+        };
+      }
+    });
+  }
 
   return repeatMap;
 };
