@@ -1,11 +1,11 @@
 import 'url';
 import fetchMock from 'fetch-mock';
-import escapeRegExp from 'lodash.escaperegexp';
 import omit from 'lodash.omit';
 import buildRequestId from './requestIdBuilder';
 import stringIsSimilarTo from './stringSimilarity';
 import buildFetchMockConfig from './fetchMockConfigBuilder';
 import buildRequestRepeatMap from './requestRepeatMapBuilder';
+import removeURLPrefix from './removeURLPrefix';
 
 export default (profileRequests, config) => {
   fetchMock.reset();
@@ -22,9 +22,9 @@ export default (profileRequests, config) => {
       const actualOptsHeaders = JSON.stringify(omit(actualOpts.headers, config.headersToOmit));
       const actualRequestHeaders = JSON.stringify(omit(request.headers, config.headersToOmit));
 
-      const urlMatches = new RegExp(`^(https?://)?(www\\.)?${escapeRegExp(request.url)}$`, 'g').test(actualUrl);
+      const urlMatches = stringIsSimilarTo(removeURLPrefix(request.url), removeURLPrefix(actualUrl));
       const bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
-      const headersMatch = actualOpts ? actualOptsHeaders === actualRequestHeaders : true;
+      const headersMatch = actualOpts ? stringIsSimilarTo(actualRequestHeaders, actualOptsHeaders) : true;
       const methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
       return urlMatches && methodMatches && bodyMatches && headersMatch;

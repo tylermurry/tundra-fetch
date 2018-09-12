@@ -10,13 +10,9 @@ var _fetchMock = require('fetch-mock');
 
 var _fetchMock2 = _interopRequireDefault(_fetchMock);
 
-var _lodash = require('lodash.escaperegexp');
+var _lodash = require('lodash.omit');
 
 var _lodash2 = _interopRequireDefault(_lodash);
-
-var _lodash3 = require('lodash.omit');
-
-var _lodash4 = _interopRequireDefault(_lodash3);
 
 var _requestIdBuilder = require('./requestIdBuilder');
 
@@ -33,6 +29,10 @@ var _fetchMockConfigBuilder2 = _interopRequireDefault(_fetchMockConfigBuilder);
 var _requestRepeatMapBuilder = require('./requestRepeatMapBuilder');
 
 var _requestRepeatMapBuilder2 = _interopRequireDefault(_requestRepeatMapBuilder);
+
+var _removeURLPrefix = require('./removeURLPrefix');
+
+var _removeURLPrefix2 = _interopRequireDefault(_removeURLPrefix);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51,12 +51,12 @@ exports.default = function (profileRequests, config) {
     var matchingFunction = function matchingFunction(url, opts) {
       var actualOpts = opts || url;
       var actualUrl = opts ? url : url.url;
-      var actualOptsHeaders = JSON.stringify((0, _lodash4.default)(actualOpts.headers, config.headersToOmit));
-      var actualRequestHeaders = JSON.stringify((0, _lodash4.default)(request.headers, config.headersToOmit));
+      var actualOptsHeaders = JSON.stringify((0, _lodash2.default)(actualOpts.headers, config.headersToOmit));
+      var actualRequestHeaders = JSON.stringify((0, _lodash2.default)(request.headers, config.headersToOmit));
 
-      var urlMatches = new RegExp('^(https?://)?(www\\.)?' + (0, _lodash2.default)(request.url) + '$', 'g').test(actualUrl);
+      var urlMatches = (0, _stringSimilarity2.default)((0, _removeURLPrefix2.default)(request.url), (0, _removeURLPrefix2.default)(actualUrl));
       var bodyMatches = actualOpts ? (0, _stringSimilarity2.default)(request.content, actualOpts.body) : true;
-      var headersMatch = actualOpts ? actualOptsHeaders === actualRequestHeaders : true;
+      var headersMatch = actualOpts ? (0, _stringSimilarity2.default)(actualRequestHeaders, actualOptsHeaders) : true;
       var methodMatches = actualOpts ? actualOpts.method === request.method : true;
 
       return urlMatches && methodMatches && bodyMatches && headersMatch;
