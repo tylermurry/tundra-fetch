@@ -1,0 +1,21 @@
+[
+  {
+    "request": {
+      "url": "http://someapi/api/user",
+      "method": "POST",
+      "content": "some body"
+    },
+    "response": {
+      "headers": {
+        "header-one": [
+          "one"
+        ],
+        "header-two": [
+          "two"
+        ]
+      },
+      "statusCode": 200,
+      "content": "some content"
+    }
+  }
+]

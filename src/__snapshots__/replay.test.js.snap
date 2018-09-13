@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`replay default should mock requests for an profile with a single request 1`] = `
+Array [
+  Array [
+    [Function],
+    Object {
+      "body": "some content",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+        "header-two": Array [
+          "two",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+      "repeat": 1,
+    },
+  ],
+]
+`;
+
+exports[`replay default should mock requests for an profile with two requests and a repeat mode of 'first' 1`] = `
+Array [
+  Array [
+    [Function],
+    Object {
+      "body": "content one",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+    },
+  ],
+  Array [
+    [Function],
+    Object {
+      "body": "content two",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+    },
+  ],
+]
+`;
+
+exports[`replay default should mock requests for an profile with two requests and a repeat mode of 'last' 1`] = `
+Array [
+  Array [
+    [Function],
+    Object {
+      "body": "content one",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+      "repeat": 1,
+    },
+  ],
+  Array [
+    [Function],
+    Object {
+      "body": "content two",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+    },
+  ],
+]
+`;
+
+exports[`replay default should mock requests for an profile with two requests and the default repeat mode 1`] = `
+Array [
+  Array [
+    [Function],
+    Object {
+      "body": "content one",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+      "repeat": 1,
+    },
+  ],
+  Array [
+    [Function],
+    Object {
+      "body": "content two",
+      "headers": Object {
+        "header-one": Array [
+          "one",
+        ],
+      },
+      "status": 200,
+    },
+    Object {
+      "name": -2450936388,
+      "overwriteRoutes": false,
+      "repeat": 1,
+    },
+  ],
+]
+`;

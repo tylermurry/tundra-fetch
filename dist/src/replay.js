@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.matchingFunction = undefined;
 
 require('url');
 
@@ -34,7 +35,30 @@ var _removeURLPrefix = require('./removeURLPrefix');
 
 var _removeURLPrefix2 = _interopRequireDefault(_removeURLPrefix);
 
+var _fetchArgumentExtractor = require('./fetchArgumentExtractor');
+
+var _fetchArgumentExtractor2 = _interopRequireDefault(_fetchArgumentExtractor);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var matchingFunction = exports.matchingFunction = function matchingFunction(matchingConfig, request) {
+  return function (_url, _config) {
+    var _extractFetchArgument = (0, _fetchArgumentExtractor2.default)([_url, _config]),
+        url = _extractFetchArgument.url,
+        config = _extractFetchArgument.config;
+
+    var headersToOmit = matchingConfig ? matchingConfig.headersToOmit : null;
+    var configHeaders = JSON.stringify((0, _lodash2.default)(config.headers, headersToOmit));
+    var requestHeaders = JSON.stringify((0, _lodash2.default)(request.headers, headersToOmit));
+
+    var urlMatches = (0, _stringSimilarity2.default)((0, _removeURLPrefix2.default)(request.url), (0, _removeURLPrefix2.default)(url));
+    var bodyMatches = config ? (0, _stringSimilarity2.default)(request.content, config.body) : true;
+    var headersMatch = config ? (0, _stringSimilarity2.default)(requestHeaders, configHeaders) : true;
+    var methodMatches = config ? config.method === request.method : true;
+
+    return urlMatches && methodMatches && bodyMatches && headersMatch;
+  };
+};
 
 exports.default = function (profileRequests, config) {
   _fetchMock2.default.reset();
@@ -48,27 +72,13 @@ exports.default = function (profileRequests, config) {
     var requestRepeatMap = repeatMap[(0, _requestIdBuilder2.default)(request)];
     requestRepeatMap.invocations += 1;
 
-    var matchingFunction = function matchingFunction(url, opts) {
-      var actualOpts = opts || url;
-      var actualUrl = opts ? url : url.url;
-      var actualOptsHeaders = JSON.stringify((0, _lodash2.default)(actualOpts.headers, config.headersToOmit));
-      var actualRequestHeaders = JSON.stringify((0, _lodash2.default)(request.headers, config.headersToOmit));
-
-      var urlMatches = (0, _stringSimilarity2.default)((0, _removeURLPrefix2.default)(request.url), (0, _removeURLPrefix2.default)(actualUrl));
-      var bodyMatches = actualOpts ? (0, _stringSimilarity2.default)(request.content, actualOpts.body) : true;
-      var headersMatch = actualOpts ? (0, _stringSimilarity2.default)(actualRequestHeaders, actualOptsHeaders) : true;
-      var methodMatches = actualOpts ? actualOpts.method === request.method : true;
-
-      return urlMatches && methodMatches && bodyMatches && headersMatch;
-    };
-
     var responseOptions = {
       body: response.content,
       headers: response.headers,
       status: response.statusCode
     };
 
-    _fetchMock2.default.mock(matchingFunction, responseOptions, (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap));
+    _fetchMock2.default.mock(matchingFunction(config, request), responseOptions, (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap));
   });
 };
 //# sourceMappingURL=replay.js.map
