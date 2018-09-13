@@ -64,4 +64,17 @@ describe('intercept', () => {
     expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
     expect(global.XMLHttpRequest().send).toMatchSnapshot();
   });
+
+  it('should log an error to the console when there is a problem submitting request data', async () => {
+    fetchMock.get('http://someurl.com', { data: 'abc123' });
+    interceptFetchCalls(12345);
+    global.XMLHttpRequest().open.mockImplementation(() => { throw new Error(); });
+    global.console = { error: jest.fn() };
+
+    const response = await (await global.fetch('http://someurl.com')).json();
+
+    expect(response).toEqual({ data: 'abc123' });
+    expect(global.console.error.mock.calls).toMatchSnapshot();
+    expect(global.XMLHttpRequest().send.mock.calls).toEqual([]);
+  });
 });

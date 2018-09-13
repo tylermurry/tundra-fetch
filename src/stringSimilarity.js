@@ -2,6 +2,7 @@ import escapeRegExp from 'lodash.escaperegexp';
 import matcher from 'matcher';
 
 export const WILDCARD_MARKER_ESCAPED = '{{\\*}}';
+export const WILDCARD_MARKER = '{{*}}';
 
 export default (source, target) => {
   if (!source || (source || '') === (target || '')) {

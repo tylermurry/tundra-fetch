@@ -6,6 +6,21 @@ import stringIsSimilarTo from './stringSimilarity';
 import buildFetchMockConfig from './fetchMockConfigBuilder';
 import buildRequestRepeatMap from './requestRepeatMapBuilder';
 import removeURLPrefix from './removeURLPrefix';
+import extractFetchArguments from './fetchArgumentExtractor';
+
+export const matchingFunction = (matchingConfig, request) => (_url, _config) => {
+  const { url, config } = extractFetchArguments([_url, _config]);
+  const headersToOmit = matchingConfig ? matchingConfig.headersToOmit : null;
+  const configHeaders = JSON.stringify(omit(config.headers, headersToOmit));
+  const requestHeaders = JSON.stringify(omit(request.headers, headersToOmit));
+
+  const urlMatches = stringIsSimilarTo(removeURLPrefix(request.url), removeURLPrefix(url));
+  const bodyMatches = config ? stringIsSimilarTo(request.content, config.body) : true;
+  const headersMatch = config ? stringIsSimilarTo(requestHeaders, configHeaders) : true;
+  const methodMatches = config ? config.method === request.method : true;
+
+  return urlMatches && methodMatches && bodyMatches && headersMatch;
+};
 
 export default (profileRequests, config) => {
   fetchMock.reset();
@@ -16,20 +31,6 @@ export default (profileRequests, config) => {
     const requestRepeatMap = repeatMap[buildRequestId(request)];
     requestRepeatMap.invocations += 1;
 
-    const matchingFunction = (url, opts) => {
-      const actualOpts = opts || url;
-      const actualUrl = opts ? url : url.url;
-      const actualOptsHeaders = JSON.stringify(omit(actualOpts.headers, config.headersToOmit));
-      const actualRequestHeaders = JSON.stringify(omit(request.headers, config.headersToOmit));
-
-      const urlMatches = stringIsSimilarTo(removeURLPrefix(request.url), removeURLPrefix(actualUrl));
-      const bodyMatches = actualOpts ? stringIsSimilarTo(request.content, actualOpts.body) : true;
-      const headersMatch = actualOpts ? stringIsSimilarTo(actualRequestHeaders, actualOptsHeaders) : true;
-      const methodMatches = actualOpts ? actualOpts.method === request.method : true;
-
-      return urlMatches && methodMatches && bodyMatches && headersMatch;
-    };
-
     const responseOptions = {
       body: response.content,
       headers: response.headers,
@@ -37,7 +38,7 @@ export default (profileRequests, config) => {
     };
 
     fetchMock.mock(
-      matchingFunction,
+      matchingFunction(config, request),
       responseOptions,
       buildFetchMockConfig(request, config, repeatMap),
     );

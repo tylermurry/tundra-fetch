@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.WILDCARD_MARKER_ESCAPED = undefined;
+exports.WILDCARD_MARKER = exports.WILDCARD_MARKER_ESCAPED = undefined;
 
 var _lodash = require('lodash.escaperegexp');
 
@@ -16,6 +16,7 @@ var _matcher2 = _interopRequireDefault(_matcher);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var WILDCARD_MARKER_ESCAPED = exports.WILDCARD_MARKER_ESCAPED = '{{\\*}}';
+var WILDCARD_MARKER = exports.WILDCARD_MARKER = '{{*}}';
 
 exports.default = function (source, target) {
   if (!source || (source || '') === (target || '')) {
