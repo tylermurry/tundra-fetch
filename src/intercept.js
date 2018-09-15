@@ -1,19 +1,21 @@
 import extractFetchArguments from './fetchArgumentExtractor';
 
+const buildRequest = (requestURL, requestConfig, response, responseBody) => ({
+  request: {
+    url: requestURL,
+    headers: requestConfig.headers,
+    method: requestConfig.method,
+    content: requestConfig.body,
+  },
+  response: {
+    headers: response.headers.map,
+    statusCode: response.status,
+    content: responseBody,
+  },
+});
+
 async function submitRequestData(_fetch, requestURL, requestConfig, response, responseBody, port) {
-  const capturedRequest = {
-    request: {
-      url: requestURL,
-      headers: requestConfig.headers,
-      method: requestConfig.method,
-      content: requestConfig.body,
-    },
-    response: {
-      headers: response.headers.map,
-      statusCode: response.status,
-      content: responseBody,
-    },
-  };
+  const capturedRequest = buildRequest(requestURL, requestConfig, response, responseBody);
 
   // Using XMLHttpRequest to not interfere with the overwritten fetch object.
   // Sending in a fire-and-forget fashion.
@@ -24,7 +26,7 @@ async function submitRequestData(_fetch, requestURL, requestConfig, response, re
   request.send(JSON.stringify(capturedRequest));
 }
 
-export default (port) => {
+export default (port, callback) => {
   const originalfetch = global.fetch;
   global.fetch = function interceptFetch(...fetchParams) {
     const { url, config } = extractFetchArguments(fetchParams);
@@ -33,6 +35,7 @@ export default (port) => {
       try {
         const responseBody = await data.clone().json();
         await submitRequestData(originalfetch, url, config, data, responseBody, port);
+        if (callback) callback(buildRequest(url, config, data, responseBody));
       } catch (error) {
         console.error('Error wiretapping fetch request');
         console.error(error);

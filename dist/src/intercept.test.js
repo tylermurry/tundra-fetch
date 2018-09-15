@@ -101,31 +101,34 @@ describe('intercept', function () {
   })));
 
   it('should intercept a POST fetch with a json body', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-    var body, headers, options, response;
+    var body, headers, interceptedCalls, options, response;
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             body = { some: 'request body' };
             headers = { some: 'header' };
+            interceptedCalls = [];
 
 
             _fetchMock2.default.post('http://someurl.com', { data: 'abc123' }, { headers: headers, body: body });
-            (0, _intercept2.default)(12345);
+            (0, _intercept2.default)(12345, function (request) {
+              return interceptedCalls.push(request);
+            });
 
             options = {
               method: 'POST',
               headers: headers,
               body: body
             };
-            _context3.next = 7;
+            _context3.next = 8;
             return global.fetch('http://someurl.com', options);
 
-          case 7:
-            _context3.next = 9;
+          case 8:
+            _context3.next = 10;
             return _context3.sent.json();
 
-          case 9:
+          case 10:
             response = _context3.sent;
 
 
@@ -134,7 +137,22 @@ describe('intercept', function () {
             expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
             expect(global.XMLHttpRequest().send).toMatchSnapshot();
 
-          case 14:
+            expect(interceptedCalls.length).toBe(1);
+            expect(interceptedCalls[0]).toEqual({
+              request: {
+                url: 'http://someurl.com',
+                headers: { some: 'header' },
+                method: 'POST',
+                content: { some: 'request body' }
+              },
+              response: {
+                headers: undefined,
+                statusCode: 200,
+                content: { data: 'abc123' }
+              }
+            });
+
+          case 17:
           case 'end':
             return _context3.stop();
         }

@@ -11,19 +11,7 @@ var submitRequestData = function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            capturedRequest = {
-              request: {
-                url: requestURL,
-                headers: requestConfig.headers,
-                method: requestConfig.method,
-                content: requestConfig.body
-              },
-              response: {
-                headers: response.headers.map,
-                statusCode: response.status,
-                content: responseBody
-              }
-            };
+            capturedRequest = buildRequest(requestURL, requestConfig, response, responseBody);
 
             // Using XMLHttpRequest to not interfere with the overwritten fetch object.
             // Sending in a fire-and-forget fashion.
@@ -55,7 +43,23 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-exports.default = function (port) {
+var buildRequest = function buildRequest(requestURL, requestConfig, response, responseBody) {
+  return {
+    request: {
+      url: requestURL,
+      headers: requestConfig.headers,
+      method: requestConfig.method,
+      content: requestConfig.body
+    },
+    response: {
+      headers: response.headers.map,
+      statusCode: response.status,
+      content: responseBody
+    }
+  };
+};
+
+exports.default = function (port, callback) {
   var originalfetch = global.fetch;
   global.fetch = function interceptFetch() {
     var _this = this;
@@ -85,25 +89,26 @@ exports.default = function (port) {
                 return submitRequestData(originalfetch, url, config, data, responseBody, port);
 
               case 6:
-                _context2.next = 12;
+                if (callback) callback(buildRequest(url, config, data, responseBody));
+                _context2.next = 13;
                 break;
 
-              case 8:
-                _context2.prev = 8;
+              case 9:
+                _context2.prev = 9;
                 _context2.t0 = _context2['catch'](0);
 
                 console.error('Error wiretapping fetch request');
                 console.error(_context2.t0);
 
-              case 12:
+              case 13:
                 return _context2.abrupt('return', data);
 
-              case 13:
+              case 14:
               case 'end':
                 return _context2.stop();
             }
           }
-        }, _callee2, _this, [[0, 8]]);
+        }, _callee2, _this, [[0, 9]]);
       }));
 
       return function (_x7) {
