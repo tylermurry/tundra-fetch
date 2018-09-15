@@ -19,7 +19,19 @@
 }
 
 .App-intro {
+    margin: 30px auto;
+    width: 700px;
   font-size: large;
+}
+
+.Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Scenario-Card {
+    width: 700px;
 }
 
 @keyframes App-logo-spin {
