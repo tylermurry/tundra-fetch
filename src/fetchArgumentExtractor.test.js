@@ -10,6 +10,15 @@ describe('fetchArgumentUtil', () => {
     });
   });
 
+  it('should extract default fetch arguments with explicitly undefined options', () => {
+    expect(extractFetchArguments(['someurl', undefined])).toEqual({
+      url: 'someurl',
+      config: {
+        method: 'GET',
+      },
+    });
+  });
+
   it('should extract fetch arguments with just a request config', () => {
     expect(extractFetchArguments([{ url: 'someurl', method: 'POST' }])).toEqual({
       url: 'someurl',

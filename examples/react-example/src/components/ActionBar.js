@@ -66,9 +66,11 @@ export class ActionBar extends Component {
         { !intercepting && interceptions.length > 0 &&
           <div style={styles.capturedProfileContainer}>
             <p>Captured Profile:</p>
-            <textarea rows={25} style={styles.interceptions}>
-              { JSON.stringify(this.state.interceptions, null, 2) }
-            </textarea>
+            <textarea
+              rows={25}
+              style={styles.interceptions}
+              defaultValue={ JSON.stringify(this.state.interceptions, null, 2) }
+            />
           </div>
         }
       </div>

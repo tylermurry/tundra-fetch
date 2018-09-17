@@ -7,7 +7,10 @@ Object.defineProperty(exports, "__esModule", {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.default = function (fetchParams) {
-  if (fetchParams && fetchParams.length === 1) {
+  var singleParameter = fetchParams && fetchParams.length === 1;
+  var undefinedSecondParameter = fetchParams && fetchParams.length === 2 && fetchParams[1] === undefined;
+
+  if (singleParameter || undefinedSecondParameter) {
     // Scenario: fetch('url')
     if (isString(fetchParams[0])) {
       return {
