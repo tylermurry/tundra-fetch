@@ -16,9 +16,10 @@ export class ScenarioCard extends Component {
   }
 
   async executeScenario(scenario) {
-    const response = await (await fetch(scenario.url, scenario.options)).json();
-    console.log(response);
-    this.setState({ scenarioData: response });
+    const response = await fetch(scenario.url, scenario.options);
+    const body = await response.json();
+
+    this.setState({ scenarioData: {status: response.status, body: body } });
   }
 
   render() {
@@ -40,10 +41,11 @@ export class ScenarioCard extends Component {
           />
           {scenarioData &&
             <CardContent style={styles.cardContent}>
+              <h4 style={styles.status}>{scenarioData.status}</h4>
               <textarea
                 rows={15}
                 style={styles.scenarioData}
-                defaultValue={ JSON.stringify(scenarioData, null, 2) }
+                defaultValue={ JSON.stringify(scenarioData.body, null, 2) }
               />
             </CardContent>
           }
@@ -57,6 +59,9 @@ const styles = ({
   cardHeader: {
     borderBottom: '1px solid #EEE',
     textAlign: 'left'
+  },
+  status: {
+    marginTop: 5,
   },
   cardContent: {
     textAlign: 'left'

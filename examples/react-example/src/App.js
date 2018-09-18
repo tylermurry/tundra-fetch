@@ -7,15 +7,7 @@ import scenarios from './scenarios';
 
 class App extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = { scenarios }
-  }
-
   render() {
-    const scenarios = this.state.scenarios;
-
     return (
       <div className="App">
         <header className="App-header">
@@ -31,7 +23,19 @@ class App extends Component {
           </div>
           <ActionBar />
 
-          <ScenarioCard scenario={scenarios[0]} />
+          { scenarios.map(scenario => (<ScenarioCard key={scenario.description} scenario={scenario} />) )}
+
+          {/*
+              - Omitting Headers
+              - Repeat Mode
+                - First
+                - Last
+                - Error
+              - Wildcard matching
+                - URL
+                - Header
+                - Body
+          */}
 
         </div>
       </div>

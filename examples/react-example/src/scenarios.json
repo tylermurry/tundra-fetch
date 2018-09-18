@@ -1,7 +1,28 @@
-{
-  "0": {
-    "description": "List Users",
-    "method": "GET",
-    "url": "https://reqres.in/api/users"
+[
+  {
+    "description": "Basic GET call",
+    "url": "https://reqres.in/api/users",
+    "options": {
+      "method": "GET"
+    }
+  },
+  {
+    "description": "GET call that fails with a 404",
+    "url": "https://reqres.in/api/users/23",
+    "options": {
+      "method": "GET"
+    }
+  },
+  {
+    "description": "Basic POST call",
+    "method": "POST",
+    "url": "https://reqres.in/api/users",
+    "options": {
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{ \"name\": \"Some Name\", \"job\": \"Leader\"}"
+    }
   }
-}
+]
