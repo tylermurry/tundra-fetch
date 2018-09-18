@@ -37,7 +37,7 @@ export class ScenarioCard extends Component {
               </Button>
             }
             title={scenario.description}
-            subheader={`${scenario.method} ${scenario.url}`}
+            subheader={`${scenario.options.method} ${scenario.url}`}
           />
           {scenarioData &&
             <CardContent style={styles.cardContent}>
