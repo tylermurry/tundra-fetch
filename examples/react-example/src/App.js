@@ -19,21 +19,26 @@ class App extends Component {
 
     const options = {
       method: request.method ? request.method : null,
-      headers: JSON.parse(request.headers),
+      headers: request.headers ? JSON.parse(request.headers) : {},
       body: request.body ? request.body : null,
     };
 
-    const response = await fetch(request.url, options);
-    const body = await response.json();
+    try {
+      const response = await fetch(request.url, options);
+      const body = await response.json();
 
-    this.setState({
-      loading: false,
-      response: {
-        status: response.status,
-        headers: response.headers,
-        body: body
-      }
-    });
+      this.setState({
+        loading: false,
+        response: {
+          status: response.status,
+          headers: response.headers,
+          body: body
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      this.setState({ loading: false });
+    }
   }
 
   render() {

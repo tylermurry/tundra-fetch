@@ -3,25 +3,27 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { interceptFetchCalls, replayProfile } from 'tundra-fetch';
+import InterceptsDialog from "./InterceptsDialog";
 
 export class ActionBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      interceptions: [],
+      intercepts: [],
       intercepting: false,
+      interceptsDialogVisible: false,
       interceptionListenerStared: false,
     };
   }
 
   interceptFetches() {
-    this.setState({ intercepting: true, interceptions: [] });
+    this.setState({ intercepting: true, intercepts: [] });
 
     if (!this.state.interceptionListenerStared) {
-      interceptFetchCalls(9090, (request) => {
+      interceptFetchCalls(0, (request) => {
         if (this.state.intercepting) {
           console.log(request);
-          this.setState({ interceptions: this.state.interceptions.concat(request) });
+          this.setState({ intercepts: this.state.intercepts.concat(request) });
         }
       });
 
@@ -30,11 +32,19 @@ export class ActionBar extends Component {
   }
 
   stopIntercepting() {
-    this.setState({ intercepting: false });
+    const updatedState = {
+      intercepting: false
+    };
+
+    if (this.state.intercepts.length > 0) {
+      updatedState.interceptsDialogVisible = true
+    }
+
+    this.setState(updatedState);
   }
 
   render() {
-    const { intercepting, interceptions } = this.state;
+    const { intercepting, intercepts, interceptsDialogVisible } = this.state;
     return (
       <div style={styles.container}>
         <div style={styles.buttonContainer}>
@@ -59,20 +69,17 @@ export class ActionBar extends Component {
         </div>
         { intercepting &&
           <div>
-            <p>{this.state.interceptions.length} Fetches Intercepted</p>
+            <p>{ intercepts.length} Fetches Intercepted</p>
             <LinearProgress style={styles.progressBar} color="primary" />
           </div>
         }
-        { !intercepting && interceptions.length > 0 &&
-          <div style={styles.capturedProfileContainer}>
-            <p>Captured Profile:</p>
-            <textarea
-              rows={25}
-              style={styles.interceptions}
-              defaultValue={ JSON.stringify(this.state.interceptions, null, 2) }
-            />
-          </div>
-        }
+
+        <InterceptsDialog
+          open={ interceptsDialogVisible }
+          close={ () => this.setState({ interceptsDialogVisible: false}) }
+          intercepts={ intercepts }
+        />
+
       </div>
     )
   }
@@ -96,7 +103,7 @@ const styles = ({
     paddingTop: '10px',
     paddingBottom: '10px',
   },
-  interceptions: {
+  intercepts: {
     resize: 'none',
     width: '99%',
     outline: 'none',

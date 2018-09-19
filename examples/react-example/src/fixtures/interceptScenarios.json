@@ -1,8 +1,11 @@
 [
   {
-    "description": "Basic GET call",
+    "description": "Basic GET call with a header",
     "url": "https://reqres.in/api/users",
     "options": {
+      "headers": {
+        "Accept": "application/json"
+      },
       "method": "GET"
     }
   },
