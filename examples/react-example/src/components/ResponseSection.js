@@ -11,7 +11,7 @@ export default ({ response }) => (
         <TextField
           style={ styles.responseTextField}
           label="Headers"
-          value={ JSON.stringify(response.headers) }
+          value={ JSON.stringify(response.headers, null, 2) }
           defaultValue={" "}
           margin="normal"
           variant="outlined"
@@ -23,7 +23,7 @@ export default ({ response }) => (
         <TextField
           style={ styles.responseTextField }
           label="Body"
-          value={ JSON.stringify(response.body) }
+          value={ JSON.stringify(response.body, null, 2) }
           defaultValue={" "}
           margin="normal"
           variant="outlined"
