@@ -3,7 +3,10 @@ const isString = value => typeof value === 'string' || value instanceof String;
 const isObject = value => typeof value === 'object' || value instanceof Object;
 
 export default function (fetchParams) {
-  if (fetchParams && fetchParams.length === 1) {
+  const singleParameter = fetchParams && fetchParams.length === 1;
+  const undefinedSecondParameter = fetchParams && fetchParams.length === 2 && fetchParams[1] === undefined;
+
+  if (singleParameter || undefinedSecondParameter) {
     // Scenario: fetch('url')
     if (isString(fetchParams[0])) {
       return {

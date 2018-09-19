@@ -1,0 +1,31 @@
+[
+  {
+    "description": "Basic GET call with a header",
+    "url": "https://reqres.in/api/users",
+    "options": {
+      "headers": {
+        "Accept": "application/json"
+      },
+      "method": "GET"
+    }
+  },
+  {
+    "description": "GET call that fails with a 404",
+    "url": "https://reqres.in/api/users/23",
+    "options": {
+      "method": "GET"
+    }
+  },
+  {
+    "description": "Basic POST call",
+    "method": "POST",
+    "url": "https://reqres.in/api/users",
+    "options": {
+      "method": "POST",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": "{ \"name\": \"Some Name\", \"job\": \"Leader\"}"
+    }
+  }
+]

@@ -47,9 +47,10 @@ describe('intercept', () => {
   it('should intercept a POST fetch with a json body', async () => {
     const body = { some: 'request body' };
     const headers = { some: 'header' };
+    const interceptedCalls = [];
 
     fetchMock.post('http://someurl.com', { data: 'abc123' }, { headers, body });
-    interceptFetchCalls(12345);
+    interceptFetchCalls(12345, request => interceptedCalls.push(request));
 
     const options = {
       method: 'POST',
@@ -63,6 +64,21 @@ describe('intercept', () => {
     expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
     expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
     expect(global.XMLHttpRequest().send).toMatchSnapshot();
+
+    expect(interceptedCalls.length).toBe(1);
+    expect(interceptedCalls[0]).toEqual({
+      request: {
+        url: 'http://someurl.com',
+        headers: { some: 'header' },
+        method: 'POST',
+        content: { some: 'request body' },
+      },
+      response: {
+        headers: undefined,
+        statusCode: 200,
+        content: { data: 'abc123' },
+      },
+    });
   });
 
   it('should log an error to the console when there is a problem submitting request data', async () => {
