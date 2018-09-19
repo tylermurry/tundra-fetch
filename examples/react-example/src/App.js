@@ -37,7 +37,14 @@ class App extends Component {
       });
     } catch (error) {
       console.error(error);
-      this.setState({ loading: false });
+      this.setState({
+        loading: false,
+        response: {
+          status: 'There was an error making the request',
+          headers: '',
+          body: ''
+        }
+      });
     }
   }
 

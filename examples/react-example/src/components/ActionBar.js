@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { interceptFetchCalls, replayProfile } from 'tundra-fetch';
 import InterceptsDialog from "./InterceptsDialog";
+import {LoadProfileDialog} from "./LoadProfileDialog";
 
 export class ActionBar extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ export class ActionBar extends Component {
       intercepts: [],
       intercepting: false,
       interceptsDialogVisible: false,
+      loadProfileDialogVisible: false,
       interceptionListenerStared: false,
     };
   }
@@ -44,7 +46,7 @@ export class ActionBar extends Component {
   }
 
   render() {
-    const { intercepting, intercepts, interceptsDialogVisible } = this.state;
+    const { intercepting, intercepts, interceptsDialogVisible, loadProfileDialogVisible } = this.state;
     return (
       <div style={styles.container}>
         <div style={styles.buttonContainer}>
@@ -61,10 +63,11 @@ export class ActionBar extends Component {
           </Button>
           <Button
             variant="contained"
-            color="default"
+            color="primary"
             style={styles.actionButton}
+            onClick={ () => this.setState({ loadProfileDialogVisible: true })}
           >
-            Load Profile A
+            Load Profile
           </Button>
         </div>
         { intercepting &&
@@ -78,6 +81,12 @@ export class ActionBar extends Component {
           open={ interceptsDialogVisible }
           close={ () => this.setState({ interceptsDialogVisible: false}) }
           intercepts={ intercepts }
+        />
+
+        <LoadProfileDialog
+          open={ loadProfileDialogVisible }
+          close={ () => this.setState({ loadProfileDialogVisible: false}) }
+          loadProfile={ (profile) => replayProfile(profile) }
         />
 
       </div>
