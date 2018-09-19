@@ -55,14 +55,7 @@ class App extends Component {
           <h2>React Example for Tundra-Fetch</h2>
         </header>
         <div style={ styles.body }>
-          <div style={ styles.appIntro}>
-            <p>
-              The scenarios below demonstrate the core functionality of Tundra in a fetch-based React app
-              using <a href="https://reqres.in">reqres.in</a> as the backend REST api.
-            </p>
-          </div>
           <ActionBar/>
-
           <div style={styles.container}>
             <div style={styles.sectionLeft}>
               <h4 style={styles.sectionTitle}>Request</h4>
@@ -101,7 +94,7 @@ const styles = ({
   },
   body: {
     padding:'0px 50px',
-    margin: '0 auto',
+    margin: '30px auto',
     maxWidth: '1300px',
     textAlign: 'center',
   },
@@ -111,10 +104,6 @@ const styles = ({
     padding: '50px',
     color: 'white',
   },
-  appIntro: {
-    margin: '50px auto',
-    fontSize: 'large'
-  }
 });
 
 export default App;

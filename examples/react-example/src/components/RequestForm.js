@@ -22,8 +22,8 @@ export class RequestForm extends Component {
   emptyState() {
     return {
       method: 'GET',
-      url: 'https://reqres.in/api/users',
-      headers: '{ "Accept": "application/json" }',
+      url: '',
+      headers: '',
       body: '',
     }
   }
