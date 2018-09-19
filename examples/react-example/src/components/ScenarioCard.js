@@ -16,6 +16,8 @@ export class ScenarioCard extends Component {
   }
 
   async executeScenario(scenario) {
+    this.setState({ scenarioData: null });
+
     const response = await fetch(scenario.url, scenario.options);
     const body = await response.json();
 
