@@ -10,6 +10,12 @@ import extractFetchArguments from './fetchArgumentExtractor';
 import buildRequest from './requestBuilder';
 import submitRequestData from './submitRequest';
 
+export const buildResponseOptions = response => ({
+  body: response.content,
+  headers: response.headers,
+  status: response.statusCode,
+});
+
 export const matchingFunction = (matchingConfig, request, response) => (_url, _config) => {
   const { url, config } = extractFetchArguments([_url, _config]);
   const headersToOmit = matchingConfig ? matchingConfig.headersToOmit : null;
@@ -24,7 +30,8 @@ export const matchingFunction = (matchingConfig, request, response) => (_url, _c
   const everythingMatches = urlMatches && methodMatches && bodyMatches && headersMatch;
 
   if (everythingMatches && matchingConfig.debuggingEnabled) {
-    const builtRequest = buildRequest(url, config, response, response.body);
+    const responseOptions = buildResponseOptions(response);
+    const builtRequest = buildRequest(url, config, responseOptions, responseOptions.body);
 
     submitRequestData(builtRequest, matchingConfig.debugPort, everythingMatches);
   }
@@ -41,19 +48,15 @@ export default (profileRequests, config) => {
     const requestRepeatMap = repeatMap[buildRequestId(request)];
     requestRepeatMap.invocations += 1;
 
-    const responseOptions = {
-      body: response.content,
-      headers: response.headers,
-      status: response.statusCode,
-    };
+    const responseOptions = buildResponseOptions(response);
 
     fetchMock.mock(
       matchingFunction(config, request, response),
-      responseOptions,
+      buildResponseOptions(response),
       buildFetchMockConfig(request, config, repeatMap),
     ).catch(async (...args) => {
       const { url, config: fetchConfig } = extractFetchArguments(args);
-      const builtRequest = buildRequest(url, fetchConfig, null, null);
+      const builtRequest = buildRequest(url, fetchConfig, responseOptions, responseOptions.body);
 
       if (config.debuggingEnabled) {
         await submitRequestData(builtRequest, config.debugPort, false);

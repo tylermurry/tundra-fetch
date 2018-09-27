@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.matchingFunction = undefined;
+exports.matchingFunction = exports.buildResponseOptions = undefined;
 
 require('url');
 
@@ -51,6 +51,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var buildResponseOptions = exports.buildResponseOptions = function buildResponseOptions(response) {
+  return {
+    body: response.content,
+    headers: response.headers,
+    status: response.statusCode
+  };
+};
+
 var matchingFunction = exports.matchingFunction = function matchingFunction(matchingConfig, request, response) {
   return function (_url, _config) {
     var _extractFetchArgument = (0, _fetchArgumentExtractor2.default)([_url, _config]),
@@ -69,7 +77,8 @@ var matchingFunction = exports.matchingFunction = function matchingFunction(matc
     var everythingMatches = urlMatches && methodMatches && bodyMatches && headersMatch;
 
     if (everythingMatches && matchingConfig.debuggingEnabled) {
-      var builtRequest = (0, _requestBuilder2.default)(url, config, response, response.body);
+      var responseOptions = buildResponseOptions(response);
+      var builtRequest = (0, _requestBuilder2.default)(url, config, responseOptions, responseOptions.body);
 
       (0, _submitRequest2.default)(builtRequest, matchingConfig.debugPort, everythingMatches);
     }
@@ -90,13 +99,9 @@ exports.default = function (profileRequests, config) {
     var requestRepeatMap = repeatMap[(0, _requestIdBuilder2.default)(request)];
     requestRepeatMap.invocations += 1;
 
-    var responseOptions = {
-      body: response.content,
-      headers: response.headers,
-      status: response.statusCode
-    };
+    var responseOptions = buildResponseOptions(response);
 
-    _fetchMock2.default.mock(matchingFunction(config, request, response), responseOptions, (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap)).catch(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    _fetchMock2.default.mock(matchingFunction(config, request, response), buildResponseOptions(response), (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap)).catch(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
@@ -108,7 +113,7 @@ exports.default = function (profileRequests, config) {
           switch (_context.prev = _context.next) {
             case 0:
               _extractFetchArgument2 = (0, _fetchArgumentExtractor2.default)(args), url = _extractFetchArgument2.url, fetchConfig = _extractFetchArgument2.config;
-              builtRequest = (0, _requestBuilder2.default)(url, fetchConfig, null, null);
+              builtRequest = (0, _requestBuilder2.default)(url, fetchConfig, responseOptions, responseOptions.body);
 
               if (!config.debuggingEnabled) {
                 _context.next = 5;
