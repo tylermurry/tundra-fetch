@@ -7,8 +7,10 @@ import buildFetchMockConfig from './fetchMockConfigBuilder';
 import buildRequestRepeatMap from './requestRepeatMapBuilder';
 import removeURLPrefix from './removeURLPrefix';
 import extractFetchArguments from './fetchArgumentExtractor';
+import buildRequest from './requestBuilder';
+import submitRequestData from './submitRequest';
 
-export const matchingFunction = (matchingConfig, request) => (_url, _config) => {
+export const matchingFunction = (matchingConfig, request, response) => (_url, _config) => {
   const { url, config } = extractFetchArguments([_url, _config]);
   const headersToOmit = matchingConfig ? matchingConfig.headersToOmit : null;
   const configHeaders = JSON.stringify(omit(config.headers, headersToOmit));
@@ -19,7 +21,15 @@ export const matchingFunction = (matchingConfig, request) => (_url, _config) => 
   const headersMatch = config ? stringIsSimilarTo(requestHeaders, configHeaders) : true;
   const methodMatches = config ? config.method === request.method : true;
 
-  return urlMatches && methodMatches && bodyMatches && headersMatch;
+  const everythingMatches = urlMatches && methodMatches && bodyMatches && headersMatch;
+
+  if (everythingMatches && matchingConfig.debuggingEnabled) {
+    const builtRequest = buildRequest(url, config, response, response.body);
+
+    submitRequestData(builtRequest, matchingConfig.debugPort, everythingMatches);
+  }
+
+  return everythingMatches;
 };
 
 export default (profileRequests, config) => {
@@ -38,9 +48,18 @@ export default (profileRequests, config) => {
     };
 
     fetchMock.mock(
-      matchingFunction(config, request),
+      matchingFunction(config, request, response),
       responseOptions,
       buildFetchMockConfig(request, config, repeatMap),
-    );
+    ).catch(async (...args) => {
+      const { url, config: fetchConfig } = extractFetchArguments(args);
+      const builtRequest = buildRequest(url, fetchConfig, null, null);
+
+      if (config.debuggingEnabled) {
+        await submitRequestData(builtRequest, config.debugPort, false);
+      }
+
+      throw Error('Unable to match request');
+    });
   });
 };

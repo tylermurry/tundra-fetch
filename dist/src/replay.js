@@ -39,9 +39,19 @@ var _fetchArgumentExtractor = require('./fetchArgumentExtractor');
 
 var _fetchArgumentExtractor2 = _interopRequireDefault(_fetchArgumentExtractor);
 
+var _requestBuilder = require('./requestBuilder');
+
+var _requestBuilder2 = _interopRequireDefault(_requestBuilder);
+
+var _submitRequest = require('./submitRequest');
+
+var _submitRequest2 = _interopRequireDefault(_submitRequest);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var matchingFunction = exports.matchingFunction = function matchingFunction(matchingConfig, request) {
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+var matchingFunction = exports.matchingFunction = function matchingFunction(matchingConfig, request, response) {
   return function (_url, _config) {
     var _extractFetchArgument = (0, _fetchArgumentExtractor2.default)([_url, _config]),
         url = _extractFetchArgument.url,
@@ -56,7 +66,15 @@ var matchingFunction = exports.matchingFunction = function matchingFunction(matc
     var headersMatch = config ? (0, _stringSimilarity2.default)(requestHeaders, configHeaders) : true;
     var methodMatches = config ? config.method === request.method : true;
 
-    return urlMatches && methodMatches && bodyMatches && headersMatch;
+    var everythingMatches = urlMatches && methodMatches && bodyMatches && headersMatch;
+
+    if (everythingMatches && matchingConfig.debuggingEnabled) {
+      var builtRequest = (0, _requestBuilder2.default)(url, config, response, response.body);
+
+      (0, _submitRequest2.default)(builtRequest, matchingConfig.debugPort, everythingMatches);
+    }
+
+    return everythingMatches;
   };
 };
 
@@ -78,7 +96,38 @@ exports.default = function (profileRequests, config) {
       status: response.statusCode
     };
 
-    _fetchMock2.default.mock(matchingFunction(config, request), responseOptions, (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap));
+    _fetchMock2.default.mock(matchingFunction(config, request, response), responseOptions, (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap)).catch(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var _extractFetchArgument2, url, fetchConfig, builtRequest;
+
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _extractFetchArgument2 = (0, _fetchArgumentExtractor2.default)(args), url = _extractFetchArgument2.url, fetchConfig = _extractFetchArgument2.config;
+              builtRequest = (0, _requestBuilder2.default)(url, fetchConfig, null, null);
+
+              if (!config.debuggingEnabled) {
+                _context.next = 5;
+                break;
+              }
+
+              _context.next = 5;
+              return (0, _submitRequest2.default)(builtRequest, config.debugPort, false);
+
+            case 5:
+              throw Error('Unable to match request');
+
+            case 6:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, undefined);
+    })));
   });
 };
 //# sourceMappingURL=replay.js.map

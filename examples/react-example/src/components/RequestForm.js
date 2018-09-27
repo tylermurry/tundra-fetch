@@ -74,9 +74,11 @@ export class RequestForm extends Component {
 
             {/* --- HEADERS --- */ }
             <TextField
+              name="headers"
               style={ styles.requestTextField}
               label="Headers"
               defaultValue={ this.state.headers }
+              onChange={this.updateField.bind(this)}
               margin="normal"
               variant="outlined"
               rows={5}
@@ -87,9 +89,11 @@ export class RequestForm extends Component {
 
             {/* --- BODY --- */ }
             <TextField
+              name="body"
               style={ styles.requestTextField}
               label="Body"
               defaultValue={ this.state.body }
+              onChange={this.updateField.bind(this)}
               margin="normal"
               variant="outlined"
               rows={9}

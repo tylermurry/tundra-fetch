@@ -22,7 +22,7 @@ export class ActionBar extends Component {
     this.setState({ intercepting: true, intercepts: [] });
 
     if (!this.state.interceptionListenerStared) {
-      interceptFetchCalls(0, (request) => {
+      interceptFetchCalls(9091, (request) => {
         if (this.state.intercepting) {
           console.log(request);
           this.setState({ intercepts: this.state.intercepts.concat(request) });
@@ -86,7 +86,7 @@ export class ActionBar extends Component {
         <LoadProfileDialog
           open={ loadProfileDialogVisible }
           close={ () => this.setState({ loadProfileDialogVisible: false}) }
-          loadProfile={ (profile) => replayProfile(profile) }
+          loadProfile={ (profile) => replayProfile(profile, { debuggingEnabled: true, debugPort: 9091 }) }
         />
 
       </div>
