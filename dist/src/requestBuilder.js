@@ -13,7 +13,7 @@ exports.default = function (requestURL, requestConfig, response, responseBody) {
       content: requestConfig && requestConfig.body
     },
     response: response ? {
-      headers: response.headers && response.headers.map,
+      headers: response.headers,
       statusCode: response.status,
       content: responseBody
     } : null
