@@ -10,7 +10,7 @@ import extractFetchArguments from './fetchArgumentExtractor';
 import buildRequest from './requestBuilder';
 import submitRequestData from './submitRequest';
 
-export const buildResponseOptions = response => ({
+const buildResponseOptions = response => ({
   body: response.content,
   headers: response.headers,
   status: response.statusCode,
@@ -29,7 +29,7 @@ export const matchingFunction = (matchingConfig, request, response) => (_url, _c
 
   const everythingMatches = urlMatches && methodMatches && bodyMatches && headersMatch;
 
-  if (everythingMatches && matchingConfig.debuggingEnabled) {
+  if (everythingMatches && matchingConfig && matchingConfig.debuggingEnabled) {
     const responseOptions = buildResponseOptions(response);
     const builtRequest = buildRequest(url, config, responseOptions, responseOptions.body);
 
@@ -55,14 +55,14 @@ export default (profileRequests, config) => {
       buildResponseOptions(response),
       buildFetchMockConfig(request, config, repeatMap),
     ).catch(async (...args) => {
-      const { url, config: fetchConfig } = extractFetchArguments(args);
-      const builtRequest = buildRequest(url, fetchConfig, responseOptions, responseOptions.body);
-
       if (config.debuggingEnabled) {
+        const { url, config: fetchConfig } = extractFetchArguments(args);
+        const builtRequest = buildRequest(url, fetchConfig, responseOptions, responseOptions.body);
+
         await submitRequestData(builtRequest, config.debugPort, false);
       }
 
-      throw Error('Unable to match request');
+      console.error('Unable to match request');
     });
   });
 };
