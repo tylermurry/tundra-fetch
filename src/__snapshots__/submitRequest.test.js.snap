@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`submitRequest should send the matched request properly 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "{\\"request\\":\\"data\\"}",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`submitRequest should send the unmatched request properly 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "{\\"request\\":\\"data\\"}",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
