@@ -53,6 +53,8 @@ replayProfile(require("./fixtures/profiles/scenario1.json", config));
 | ------ | ------ |
 | headersToOmit | An array of header keys to ignore (ex. `['Accept-Encoding', 'User-Agent']`)|
 | repeatMode | `errorAfterLast` (default): Replay exactly as recorded but throw an error for further requests<br>`first`: Always repeat the first recorded response<br>`last`: Replay exactly as recorded and then repeat the last request forever
+| debuggingEnabled | `default: true` - All profile replay activity will be sent to the Tundra server and visible in the Tundra console. (Only available using `tundra-cli` 2.0.0 or higher)
+| debugPort | `default: 9091` - The port number of the Tundra server to send request debug data.
 
 #### Using Wildcards to Match Requests
 There are times when an application will use dynamic data and the body, headers or url will not be *exactly* the same each time (ex. including the current date in the request body).

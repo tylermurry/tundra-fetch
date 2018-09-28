@@ -10,7 +10,10 @@ import extractFetchArguments from './fetchArgumentExtractor';
 import buildRequest from './requestBuilder';
 import submitRequestData from './submitRequest';
 
-const DEFAULT_DEBUG_PORT = 9091;
+const DEFAULT_CONFIG = {
+  debuggingEnabled: true,
+  debugPort: 9091,
+};
 
 const buildResponseOptions = response => ({
   body: response.content,
@@ -41,7 +44,7 @@ export const matchingFunction = (matchingConfig, request, response) => (_url, _c
   return everythingMatches;
 };
 
-export default (profileRequests, config) => {
+export default (profileRequests, config = DEFAULT_CONFIG) => {
   fetchMock.reset();
 
   const repeatMap = buildRequestRepeatMap(profileRequests);
@@ -61,7 +64,7 @@ export default (profileRequests, config) => {
         const { url, config: fetchConfig } = extractFetchArguments(args);
         const builtRequest = buildRequest(url, fetchConfig, responseOptions, responseOptions.body);
 
-        await submitRequestData(builtRequest, config.debugPort ? config.debugPort : DEFAULT_DEBUG_PORT, false);
+        await submitRequestData(builtRequest, config.debugPort, false);
       }
 
       console.error('Unable to match request');
