@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`requestBuilder should build a request without a request config 1`] = `
+Object {
+  "request": Object {
+    "content": null,
+    "headers": null,
+    "method": null,
+    "url": "url",
+  },
+  "response": Object {
+    "content": "response body",
+    "headers": Object {
+      "1": Array [
+        "1",
+      ],
+      "2": Array [
+        "2",
+      ],
+    },
+    "statusCode": "response status",
+  },
+}
+`;
+
+exports[`requestBuilder should build a request without a response 1`] = `
+Object {
+  "request": Object {
+    "content": "request content",
+    "headers": "request headers",
+    "method": "request method",
+    "url": "url",
+  },
+  "response": null,
+}
+`;
+
+exports[`requestBuilder should build a standard request 1`] = `
+Object {
+  "request": Object {
+    "content": "request content",
+    "headers": "request headers",
+    "method": "request method",
+    "url": "url",
+  },
+  "response": Object {
+    "content": "response body",
+    "headers": Object {
+      "1": Array [
+        "1",
+      ],
+      "2": Array [
+        "2",
+      ],
+    },
+    "statusCode": "response status",
+  },
+}
+`;
