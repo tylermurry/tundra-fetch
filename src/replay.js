@@ -10,6 +10,8 @@ import extractFetchArguments from './fetchArgumentExtractor';
 import buildRequest from './requestBuilder';
 import submitRequestData from './submitRequest';
 
+const DEFAULT_DEBUG_PORT = 9091;
+
 const buildResponseOptions = response => ({
   body: response.content,
   headers: response.headers,
@@ -59,7 +61,7 @@ export default (profileRequests, config) => {
         const { url, config: fetchConfig } = extractFetchArguments(args);
         const builtRequest = buildRequest(url, fetchConfig, responseOptions, responseOptions.body);
 
-        await submitRequestData(builtRequest, config.debugPort, false);
+        await submitRequestData(builtRequest, config.debugPort ? config.debugPort : DEFAULT_DEBUG_PORT, false);
       }
 
       console.error('Unable to match request');
