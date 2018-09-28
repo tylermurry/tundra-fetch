@@ -1,9 +1,5 @@
 'use strict';
 
-var _fetchMock = require('fetch-mock');
-
-var _fetchMock2 = _interopRequireDefault(_fetchMock);
-
 var _submitRequest = require('./submitRequest');
 
 var _submitRequest2 = _interopRequireDefault(_submitRequest);
@@ -12,8 +8,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 describe('submitRequest', function () {
   beforeEach(function () {
-    _fetchMock2.default.restore();
-
     var xmlHttpRequestMocks = {
       open: jest.fn(),
       send: jest.fn(),

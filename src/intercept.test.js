@@ -1,29 +1,26 @@
 import fetchMock from 'fetch-mock';
 import interceptFetchCalls from './intercept';
+import submitRequest from './submitRequest';
+
+jest.mock('./submitRequest', () => jest.fn());
 
 describe('intercept', () => {
+  const callback = jest.fn();
+
   beforeEach(() => {
     fetchMock.restore();
-
-    const xmlHttpRequestMocks = {
-      open: jest.fn(),
-      send: jest.fn(),
-      setRequestHeader: jest.fn(),
-    };
-
-    global.XMLHttpRequest = () => xmlHttpRequestMocks;
+    jest.clearAllMocks();
   });
 
   it('should intercept a plain url', async () => {
     fetchMock.get('http://someurl.com', { data: 'abc123' });
-    interceptFetchCalls(12345);
+    interceptFetchCalls(12345, callback);
 
     const response = await (await global.fetch('http://someurl.com')).json();
 
     expect(response).toEqual({ data: 'abc123' });
-    expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
-    expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
-    expect(global.XMLHttpRequest().send).toMatchSnapshot();
+    expect(submitRequest.mock.calls).toMatchSnapshot();
+    expect(callback).toHaveBeenCalled();
   });
 
   it('should intercept a url with custom options', async () => {
@@ -34,14 +31,13 @@ describe('intercept', () => {
     };
 
     fetchMock.get('http://someurl.com', { data: 'abc123' }, { headers });
-    interceptFetchCalls(12345);
+    interceptFetchCalls(12345, callback);
 
     const response = await (await global.fetch('http://someurl.com', options)).json();
 
     expect(response).toEqual({ data: 'abc123' });
-    expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
-    expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
-    expect(global.XMLHttpRequest().send).toMatchSnapshot();
+    expect(submitRequest.mock.calls).toMatchSnapshot();
+    expect(callback).toHaveBeenCalled();
   });
 
   it('should intercept a POST fetch with a json body', async () => {
@@ -61,9 +57,7 @@ describe('intercept', () => {
     const response = await (await global.fetch('http://someurl.com', options)).json();
 
     expect(response).toEqual({ data: 'abc123' });
-    expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
-    expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
-    expect(global.XMLHttpRequest().send).toMatchSnapshot();
+    expect(submitRequest.mock.calls).toMatchSnapshot();
 
     expect(interceptedCalls.length).toBe(1);
     expect(interceptedCalls[0]).toEqual({
@@ -84,13 +78,13 @@ describe('intercept', () => {
   it('should log an error to the console when there is a problem submitting request data', async () => {
     fetchMock.get('http://someurl.com', { data: 'abc123' });
     interceptFetchCalls(12345);
-    global.XMLHttpRequest().open.mockImplementation(() => { throw new Error(); });
+    submitRequest.mockImplementation(() => { throw new Error(); });
     global.console = { error: jest.fn() };
 
     const response = await (await global.fetch('http://someurl.com')).json();
 
     expect(response).toEqual({ data: 'abc123' });
     expect(global.console.error.mock.calls).toMatchSnapshot();
-    expect(global.XMLHttpRequest().send.mock.calls).toEqual([]);
+    expect(callback).not.toHaveBeenCalled();
   });
 });

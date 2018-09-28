@@ -8,23 +8,24 @@ var _intercept = require('./intercept');
 
 var _intercept2 = _interopRequireDefault(_intercept);
 
+var _submitRequest = require('./submitRequest');
+
+var _submitRequest2 = _interopRequireDefault(_submitRequest);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+jest.mock('./submitRequest', function () {
+  return jest.fn();
+});
+
 describe('intercept', function () {
+  var callback = jest.fn();
+
   beforeEach(function () {
     _fetchMock2.default.restore();
-
-    var xmlHttpRequestMocks = {
-      open: jest.fn(),
-      send: jest.fn(),
-      setRequestHeader: jest.fn()
-    };
-
-    global.XMLHttpRequest = function () {
-      return xmlHttpRequestMocks;
-    };
+    jest.clearAllMocks();
   });
 
   it('should intercept a plain url', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -34,7 +35,7 @@ describe('intercept', function () {
         switch (_context.prev = _context.next) {
           case 0:
             _fetchMock2.default.get('http://someurl.com', { data: 'abc123' });
-            (0, _intercept2.default)(12345);
+            (0, _intercept2.default)(12345, callback);
 
             _context.next = 4;
             return global.fetch('http://someurl.com');
@@ -48,11 +49,10 @@ describe('intercept', function () {
 
 
             expect(response).toEqual({ data: 'abc123' });
-            expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
-            expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
-            expect(global.XMLHttpRequest().send).toMatchSnapshot();
+            expect(_submitRequest2.default.mock.calls).toMatchSnapshot();
+            expect(callback).toHaveBeenCalled();
 
-          case 11:
+          case 10:
           case 'end':
             return _context.stop();
         }
@@ -74,7 +74,7 @@ describe('intercept', function () {
 
 
             _fetchMock2.default.get('http://someurl.com', { data: 'abc123' }, { headers: headers });
-            (0, _intercept2.default)(12345);
+            (0, _intercept2.default)(12345, callback);
 
             _context2.next = 6;
             return global.fetch('http://someurl.com', options);
@@ -88,11 +88,10 @@ describe('intercept', function () {
 
 
             expect(response).toEqual({ data: 'abc123' });
-            expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
-            expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
-            expect(global.XMLHttpRequest().send).toMatchSnapshot();
+            expect(_submitRequest2.default.mock.calls).toMatchSnapshot();
+            expect(callback).toHaveBeenCalled();
 
-          case 13:
+          case 12:
           case 'end':
             return _context2.stop();
         }
@@ -133,9 +132,7 @@ describe('intercept', function () {
 
 
             expect(response).toEqual({ data: 'abc123' });
-            expect(global.XMLHttpRequest().open).toBeCalledWith('POST', 'http://localhost:12345/requests');
-            expect(global.XMLHttpRequest().setRequestHeader).toBeCalledWith('Content-Type', 'application/json');
-            expect(global.XMLHttpRequest().send).toMatchSnapshot();
+            expect(_submitRequest2.default.mock.calls).toMatchSnapshot();
 
             expect(interceptedCalls.length).toBe(1);
             expect(interceptedCalls[0]).toEqual({
@@ -152,7 +149,7 @@ describe('intercept', function () {
               }
             });
 
-          case 17:
+          case 15:
           case 'end':
             return _context3.stop();
         }
@@ -168,7 +165,7 @@ describe('intercept', function () {
           case 0:
             _fetchMock2.default.get('http://someurl.com', { data: 'abc123' });
             (0, _intercept2.default)(12345);
-            global.XMLHttpRequest().open.mockImplementation(function () {
+            _submitRequest2.default.mockImplementation(function () {
               throw new Error();
             });
             global.console = { error: jest.fn() };
@@ -186,7 +183,7 @@ describe('intercept', function () {
 
             expect(response).toEqual({ data: 'abc123' });
             expect(global.console.error.mock.calls).toMatchSnapshot();
-            expect(global.XMLHttpRequest().send.mock.calls).toEqual([]);
+            expect(callback).not.toHaveBeenCalled();
 
           case 12:
           case 'end':

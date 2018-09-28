@@ -1,10 +1,7 @@
-import fetchMock from 'fetch-mock';
 import submitRequest from './submitRequest';
 
 describe('submitRequest', () => {
   beforeEach(() => {
-    fetchMock.restore();
-
     const xmlHttpRequestMocks = {
       open: jest.fn(),
       send: jest.fn(),

@@ -47,30 +47,38 @@ exports.default = function (port, callback) {
               case 3:
                 responseBody = _context.sent;
                 builtRequest = (0, _requestBuilder2.default)(url, config, data, responseBody);
-                _context.next = 7;
+
+                // Fetch stores the headers in a map. We need to reset it to the inner map structure to get the right value
+
+                if (builtRequest.response.headers) {
+                  builtRequest.response.headers = builtRequest.response.headers.map;
+                }
+
+                _context.next = 8;
                 return (0, _submitRequest2.default)(builtRequest, port);
 
-              case 7:
+              case 8:
+
                 if (callback) callback(builtRequest);
-                _context.next = 14;
+                _context.next = 15;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 11:
+                _context.prev = 11;
                 _context.t0 = _context['catch'](0);
 
                 console.error('Error wiretapping fetch request');
                 console.error(_context.t0);
 
-              case 14:
+              case 15:
                 return _context.abrupt('return', data);
 
-              case 15:
+              case 16:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, _this, [[0, 10]]);
+        }, _callee, _this, [[0, 11]]);
       }));
 
       return function (_x) {
