@@ -48,7 +48,7 @@ export const matchingFunction = (matchingConfig, request, response) => (_url, _c
 export default (profileRequests, config) => {
   fetchMock.reset();
 
-  const defaultedConfig = { ...DEFAULT_CONFIG, config };
+  const defaultedConfig = { ...DEFAULT_CONFIG, ...config };
   const repeatMap = buildRequestRepeatMap(profileRequests);
 
   profileRequests.forEach(({ request, response }) => {

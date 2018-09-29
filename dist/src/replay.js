@@ -97,7 +97,7 @@ var matchingFunction = exports.matchingFunction = function matchingFunction(matc
 exports.default = function (profileRequests, config) {
   _fetchMock2.default.reset();
 
-  var defaultedConfig = _extends({}, DEFAULT_CONFIG, { config: config });
+  var defaultedConfig = _extends({}, DEFAULT_CONFIG, config);
   var repeatMap = (0, _requestRepeatMapBuilder2.default)(profileRequests);
 
   profileRequests.forEach(function (_ref) {
