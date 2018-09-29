@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.matchingFunction = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 require('url');
 
 var _fetchMock = require('fetch-mock');
@@ -92,11 +94,10 @@ var matchingFunction = exports.matchingFunction = function matchingFunction(matc
   };
 };
 
-exports.default = function (profileRequests) {
-  var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DEFAULT_CONFIG;
-
+exports.default = function (profileRequests, config) {
   _fetchMock2.default.reset();
 
+  var defaultedConfig = _extends({}, DEFAULT_CONFIG, { config: config });
   var repeatMap = (0, _requestRepeatMapBuilder2.default)(profileRequests);
 
   profileRequests.forEach(function (_ref) {
@@ -108,7 +109,7 @@ exports.default = function (profileRequests) {
 
     var responseOptions = buildResponseOptions(response);
 
-    _fetchMock2.default.mock(matchingFunction(config, request, response), buildResponseOptions(response), (0, _fetchMockConfigBuilder2.default)(request, config, repeatMap)).catch(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+    _fetchMock2.default.mock(matchingFunction(defaultedConfig, request, response), buildResponseOptions(response), (0, _fetchMockConfigBuilder2.default)(request, defaultedConfig, repeatMap)).catch(_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
       for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
@@ -119,7 +120,7 @@ exports.default = function (profileRequests) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!config.debuggingEnabled) {
+              if (!defaultedConfig.debuggingEnabled) {
                 _context.next = 5;
                 break;
               }
@@ -127,7 +128,7 @@ exports.default = function (profileRequests) {
               _extractFetchArgument2 = (0, _fetchArgumentExtractor2.default)(args), url = _extractFetchArgument2.url, fetchConfig = _extractFetchArgument2.config;
               builtRequest = (0, _requestBuilder2.default)(url, fetchConfig, responseOptions, responseOptions.body);
               _context.next = 5;
-              return (0, _submitRequest2.default)(builtRequest, config.debugPort, false);
+              return (0, _submitRequest2.default)(builtRequest, defaultedConfig.debugPort, false);
 
             case 5:
 

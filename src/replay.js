@@ -10,6 +10,7 @@ import extractFetchArguments from './fetchArgumentExtractor';
 import buildRequest from './requestBuilder';
 import submitRequestData from './submitRequest';
 
+
 const DEFAULT_CONFIG = {
   debuggingEnabled: true,
   debugPort: 9091,
@@ -44,9 +45,10 @@ export const matchingFunction = (matchingConfig, request, response) => (_url, _c
   return everythingMatches;
 };
 
-export default (profileRequests, config = DEFAULT_CONFIG) => {
+export default (profileRequests, config) => {
   fetchMock.reset();
 
+  const defaultedConfig = { ...DEFAULT_CONFIG, config };
   const repeatMap = buildRequestRepeatMap(profileRequests);
 
   profileRequests.forEach(({ request, response }) => {
@@ -56,15 +58,15 @@ export default (profileRequests, config = DEFAULT_CONFIG) => {
     const responseOptions = buildResponseOptions(response);
 
     fetchMock.mock(
-      matchingFunction(config, request, response),
+      matchingFunction(defaultedConfig, request, response),
       buildResponseOptions(response),
-      buildFetchMockConfig(request, config, repeatMap),
+      buildFetchMockConfig(request, defaultedConfig, repeatMap),
     ).catch(async (...args) => {
-      if (config.debuggingEnabled) {
+      if (defaultedConfig.debuggingEnabled) {
         const { url, config: fetchConfig } = extractFetchArguments(args);
         const builtRequest = buildRequest(url, fetchConfig, responseOptions, responseOptions.body);
 
-        await submitRequestData(builtRequest, config.debugPort, false);
+        await submitRequestData(builtRequest, defaultedConfig.debugPort, false);
       }
 
       console.error('Unable to match request');
