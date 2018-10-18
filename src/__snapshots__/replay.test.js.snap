@@ -1,6 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`replay default should mock requests for an profile with a single request 1`] = `
+exports[`replay default should catch unmatched requests with debugging enabled 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": undefined,
+        "headers": undefined,
+        "method": "POST",
+        "url": "http://someapi/api/user",
+      },
+      "response": Object {
+        "content": "some content",
+        "headers": Object {
+          "header-one": Array [
+            "one",
+          ],
+          "header-two": Array [
+            "two",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    false,
+  ],
+]
+`;
+
+exports[`replay default should mock requests for a profile with a single request 1`] = `
 Array [
   Array [
     [Function],
@@ -25,7 +54,7 @@ Array [
 ]
 `;
 
-exports[`replay default should mock requests for an profile with two requests and a repeat mode of 'first' 1`] = `
+exports[`replay default should mock requests for a profile with two requests and a repeat mode of 'first' 1`] = `
 Array [
   Array [
     [Function],
@@ -62,7 +91,7 @@ Array [
 ]
 `;
 
-exports[`replay default should mock requests for an profile with two requests and a repeat mode of 'last' 1`] = `
+exports[`replay default should mock requests for a profile with two requests and a repeat mode of 'last' 1`] = `
 Array [
   Array [
     [Function],
@@ -100,7 +129,7 @@ Array [
 ]
 `;
 
-exports[`replay default should mock requests for an profile with two requests and the default repeat mode 1`] = `
+exports[`replay default should mock requests for a profile with two requests and the default repeat mode 1`] = `
 Array [
   Array [
     [Function],
@@ -135,6 +164,300 @@ Array [
       "overwriteRoutes": false,
       "repeat": 1,
     },
+  ],
+]
+`;
+
+exports[`replay matchingFunction should match a standard request on all factors and a matching config with debugging enabled 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should match a standard request on all factors and a matching config with headers to omit 1`] = `Array []`;
+
+exports[`replay matchingFunction should match a standard request on all factors and a null matching config 1`] = `Array []`;
+
+exports[`replay matchingFunction should match a standard request on all factors and an empty matching config 1`] = `Array []`;
+
+exports[`replay matchingFunction should match a standard request on all factors with a fuzzy body 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should match a standard request on all factors with a fuzzy header 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should match a standard request on all factors with a fuzzy url 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should not match a standard request because the URL doesn't match 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should not match a standard request because the body doesn't match 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should not match a standard request because the headers don't match 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
+  ],
+]
+`;
+
+exports[`replay matchingFunction should not match a standard request because the method doesn't match 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": "body",
+        "headers": Object {
+          "abc": Array [
+            "123",
+          ],
+          "xyz": Array [
+            "456",
+          ],
+        },
+        "method": "GET",
+        "url": "http://www.someurl.com",
+      },
+      "response": Object {
+        "content": "body",
+        "headers": Object {
+          "1": Array [
+            "1",
+          ],
+          "2": Array [
+            "2",
+          ],
+        },
+        "statusCode": 200,
+      },
+    },
+    9091,
+    true,
   ],
 ]
 `;
