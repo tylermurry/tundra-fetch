@@ -8,22 +8,17 @@ export default (port, callback) => {
     const { url, config } = extractFetchArguments(fetchParams);
 
     return originalfetch.apply(this, arguments).then(async (data) => { // eslint-disable-line prefer-rest-params
-      try {
-        const responseBody = await data.clone().json();
-        const builtRequest = buildRequest(url, config, data, responseBody);
+      const responseBody = await data.clone().json();
+      const builtRequest = buildRequest(url, config, data, responseBody);
 
-        // Fetch stores the headers in a map. We need to reset it to the inner map structure to get the right value
-        if (builtRequest.response.headers) {
-          builtRequest.response.headers = builtRequest.response.headers.map;
-        }
-
-        await submitRequestData(builtRequest, port);
-
-        if (callback) callback(builtRequest);
-      } catch (error) {
-        console.error('Error wiretapping fetch request');
-        console.error(error);
+      // Fetch stores the headers in a map. We need to reset it to the inner map structure to get the right value
+      if (builtRequest.response.headers) {
+        builtRequest.response.headers = builtRequest.response.headers.map;
       }
+
+      await submitRequestData(builtRequest, port);
+
+      if (callback) callback(builtRequest);
 
       return data;
     });
