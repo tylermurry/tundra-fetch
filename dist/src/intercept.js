@@ -40,11 +40,10 @@ exports.default = function (port, callback) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.prev = 0;
-                _context.next = 3;
+                _context.next = 2;
                 return data.clone().json();
 
-              case 3:
+              case 2:
                 responseBody = _context.sent;
                 builtRequest = (0, _requestBuilder2.default)(url, config, data, responseBody);
 
@@ -54,31 +53,21 @@ exports.default = function (port, callback) {
                   builtRequest.response.headers = builtRequest.response.headers.map;
                 }
 
-                _context.next = 8;
+                _context.next = 7;
                 return (0, _submitRequest2.default)(builtRequest, port);
 
-              case 8:
+              case 7:
 
                 if (callback) callback(builtRequest);
-                _context.next = 15;
-                break;
 
-              case 11:
-                _context.prev = 11;
-                _context.t0 = _context['catch'](0);
-
-                console.error('Error wiretapping fetch request');
-                console.error(_context.t0);
-
-              case 15:
                 return _context.abrupt('return', data);
 
-              case 16:
+              case 9:
               case 'end':
                 return _context.stop();
             }
           }
-        }, _callee, _this, [[0, 11]]);
+        }, _callee, _this);
       }));
 
       return function (_x) {

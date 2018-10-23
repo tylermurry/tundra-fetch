@@ -74,17 +74,4 @@ describe('intercept', () => {
       },
     });
   });
-
-  it('should log an error to the console when there is a problem submitting request data', async () => {
-    fetchMock.get('http://someurl.com', { data: 'abc123' });
-    interceptFetchCalls(12345);
-    submitRequest.mockImplementation(() => { throw new Error(); });
-    global.console = { error: jest.fn() };
-
-    const response = await (await global.fetch('http://someurl.com')).json();
-
-    expect(response).toEqual({ data: 'abc123' });
-    expect(global.console.error.mock.calls).toMatchSnapshot();
-    expect(callback).not.toHaveBeenCalled();
-  });
 });

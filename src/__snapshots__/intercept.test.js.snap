@@ -74,14 +74,3 @@ Array [
   ],
 ]
 `;
-
-exports[`intercept should log an error to the console when there is a problem submitting request data 1`] = `
-Array [
-  Array [
-    "Error wiretapping fetch request",
-  ],
-  Array [
-    [Error],
-  ],
-]
-`;
