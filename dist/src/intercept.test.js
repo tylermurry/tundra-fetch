@@ -156,41 +156,5 @@ describe('intercept', function () {
       }
     }, _callee3, undefined);
   })));
-
-  it('should log an error to the console when there is a problem submitting request data', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-    var response;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            _fetchMock2.default.get('http://someurl.com', { data: 'abc123' });
-            (0, _intercept2.default)(12345);
-            _submitRequest2.default.mockImplementation(function () {
-              throw new Error();
-            });
-            global.console = { error: jest.fn() };
-
-            _context4.next = 6;
-            return global.fetch('http://someurl.com');
-
-          case 6:
-            _context4.next = 8;
-            return _context4.sent.json();
-
-          case 8:
-            response = _context4.sent;
-
-
-            expect(response).toEqual({ data: 'abc123' });
-            expect(global.console.error.mock.calls).toMatchSnapshot();
-            expect(callback).not.toHaveBeenCalled();
-
-          case 12:
-          case 'end':
-            return _context4.stop();
-        }
-      }
-    }, _callee4, undefined);
-  })));
 });
 //# sourceMappingURL=intercept.test.js.map
