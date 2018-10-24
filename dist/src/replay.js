@@ -94,7 +94,14 @@ var matchingFunction = exports.matchingFunction = function matchingFunction(matc
   };
 };
 
-exports.default = function (profileRequests, config) {
+exports.default = function (profileName, config) {
+  var user = profileName.toLowerCase();
+  var profileRequests = [];
+  try {
+    profileRequests = config.profileData[user]();
+  } catch (e) {
+    throw new Error('No profile found for ' + profileName);
+  }
   _fetchMock2.default.reset();
 
   var defaultedConfig = _extends({}, DEFAULT_CONFIG, config);
