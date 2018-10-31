@@ -50,6 +50,48 @@ Array [
 ]
 `;
 
+exports[`intercept should intercept a request with a non-json response body 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": undefined,
+        "headers": undefined,
+        "method": "GET",
+        "url": "http://someurl.com",
+      },
+      "response": Object {
+        "content": "abc123",
+        "headers": undefined,
+        "statusCode": 200,
+      },
+    },
+    12345,
+  ],
+]
+`;
+
+exports[`intercept should intercept a request with an empty response body - e.g. 204 1`] = `
+Array [
+  Array [
+    Object {
+      "request": Object {
+        "content": undefined,
+        "headers": undefined,
+        "method": "GET",
+        "url": "http://someurl.com",
+      },
+      "response": Object {
+        "content": null,
+        "headers": undefined,
+        "statusCode": 204,
+      },
+    },
+    12345,
+  ],
+]
+`;
+
 exports[`intercept should intercept a url with custom options 1`] = `
 Array [
   Array [

@@ -35,15 +35,24 @@ exports.default = function (port, callback) {
 
     return originalfetch.apply(this, arguments).then(function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(data) {
-        var responseBody, builtRequest;
+        var response, responseBody, builtRequest;
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return data.clone().json();
+                return data.clone();
 
               case 2:
+                response = _context.sent;
+                _context.next = 5;
+                return response.json().catch(function () {
+                  return response.body;
+                }).then(function (body) {
+                  return body;
+                });
+
+              case 5:
                 responseBody = _context.sent;
                 builtRequest = (0, _requestBuilder2.default)(url, config, data, responseBody);
 
@@ -53,16 +62,16 @@ exports.default = function (port, callback) {
                   builtRequest.response.headers = builtRequest.response.headers.map;
                 }
 
-                _context.next = 7;
+                _context.next = 10;
                 return (0, _submitRequest2.default)(builtRequest, port);
 
-              case 7:
+              case 10:
 
                 if (callback) callback(builtRequest);
 
                 return _context.abrupt('return', data);
 
-              case 9:
+              case 12:
               case 'end':
                 return _context.stop();
             }

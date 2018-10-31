@@ -23,6 +23,28 @@ describe('intercept', () => {
     expect(callback).toHaveBeenCalled();
   });
 
+  it('should intercept a request with an empty response body - e.g. 204', async () => {
+    fetchMock.get('http://someurl.com', 204);
+    interceptFetchCalls(12345, callback);
+
+    const response = await (await global.fetch('http://someurl.com')).body;
+
+    expect(response).toEqual(null);
+    expect(submitRequest.mock.calls).toMatchSnapshot();
+    expect(callback).toHaveBeenCalled();
+  });
+
+  it('should intercept a request with a non-json response body', async () => {
+    fetchMock.get('http://someurl.com', 'abc123');
+    interceptFetchCalls(12345, callback);
+
+    const response = await (await global.fetch('http://someurl.com')).body;
+
+    expect(response).toEqual('abc123');
+    expect(submitRequest.mock.calls).toMatchSnapshot();
+    expect(callback).toHaveBeenCalled();
+  });
+
   it('should intercept a url with custom options', async () => {
     const headers = { some: 'header' };
     const options = {

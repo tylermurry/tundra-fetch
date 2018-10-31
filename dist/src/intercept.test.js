@@ -60,11 +60,75 @@ describe('intercept', function () {
     }, _callee, undefined);
   })));
 
-  it('should intercept a url with custom options', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-    var headers, options, response;
+  it('should intercept a request with an empty response body - e.g. 204', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+    var response;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
+          case 0:
+            _fetchMock2.default.get('http://someurl.com', 204);
+            (0, _intercept2.default)(12345, callback);
+
+            _context2.next = 4;
+            return global.fetch('http://someurl.com');
+
+          case 4:
+            _context2.next = 6;
+            return _context2.sent.body;
+
+          case 6:
+            response = _context2.sent;
+
+
+            expect(response).toEqual(null);
+            expect(_submitRequest2.default.mock.calls).toMatchSnapshot();
+            expect(callback).toHaveBeenCalled();
+
+          case 10:
+          case 'end':
+            return _context2.stop();
+        }
+      }
+    }, _callee2, undefined);
+  })));
+
+  it('should intercept a request with a non-json response body', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+    var response;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _fetchMock2.default.get('http://someurl.com', 'abc123');
+            (0, _intercept2.default)(12345, callback);
+
+            _context3.next = 4;
+            return global.fetch('http://someurl.com');
+
+          case 4:
+            _context3.next = 6;
+            return _context3.sent.body;
+
+          case 6:
+            response = _context3.sent;
+
+
+            expect(response).toEqual('abc123');
+            expect(_submitRequest2.default.mock.calls).toMatchSnapshot();
+            expect(callback).toHaveBeenCalled();
+
+          case 10:
+          case 'end':
+            return _context3.stop();
+        }
+      }
+    }, _callee3, undefined);
+  })));
+
+  it('should intercept a url with custom options', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+    var headers, options, response;
+    return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
           case 0:
             headers = { some: 'header' };
             options = {
@@ -76,15 +140,15 @@ describe('intercept', function () {
             _fetchMock2.default.get('http://someurl.com', { data: 'abc123' }, { headers: headers });
             (0, _intercept2.default)(12345, callback);
 
-            _context2.next = 6;
+            _context4.next = 6;
             return global.fetch('http://someurl.com', options);
 
           case 6:
-            _context2.next = 8;
-            return _context2.sent.json();
+            _context4.next = 8;
+            return _context4.sent.json();
 
           case 8:
-            response = _context2.sent;
+            response = _context4.sent;
 
 
             expect(response).toEqual({ data: 'abc123' });
@@ -93,17 +157,17 @@ describe('intercept', function () {
 
           case 12:
           case 'end':
-            return _context2.stop();
+            return _context4.stop();
         }
       }
-    }, _callee2, undefined);
+    }, _callee4, undefined);
   })));
 
-  it('should intercept a POST fetch with a json body', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+  it('should intercept a POST fetch with a json body', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
     var body, headers, interceptedCalls, options, response;
-    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
             body = { some: 'request body' };
             headers = { some: 'header' };
@@ -120,15 +184,15 @@ describe('intercept', function () {
               headers: headers,
               body: body
             };
-            _context3.next = 8;
+            _context5.next = 8;
             return global.fetch('http://someurl.com', options);
 
           case 8:
-            _context3.next = 10;
-            return _context3.sent.json();
+            _context5.next = 10;
+            return _context5.sent.json();
 
           case 10:
-            response = _context3.sent;
+            response = _context5.sent;
 
 
             expect(response).toEqual({ data: 'abc123' });
@@ -151,10 +215,10 @@ describe('intercept', function () {
 
           case 15:
           case 'end':
-            return _context3.stop();
+            return _context5.stop();
         }
       }
-    }, _callee3, undefined);
+    }, _callee5, undefined);
   })));
 });
 //# sourceMappingURL=intercept.test.js.map
