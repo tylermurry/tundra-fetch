@@ -45,7 +45,14 @@ export const matchingFunction = (matchingConfig, request, response) => (_url, _c
   return everythingMatches;
 };
 
-export default (profileRequests, config) => {
+export default (profileName, config) => {
+  const user = profileName.toLowerCase();
+  let profileRequests = [];
+  try {
+    profileRequests = config.profileData[user]();
+  } catch (e) {
+    throw new Error(`No profile found for ${profileName}`);
+  }
   fetchMock.reset();
 
   const defaultedConfig = { ...DEFAULT_CONFIG, ...config };

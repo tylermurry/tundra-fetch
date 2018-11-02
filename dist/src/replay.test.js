@@ -1,5 +1,7 @@
 'use strict';
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _fetchMock = require('fetch-mock');
 
 var _fetchMock2 = _interopRequireDefault(_fetchMock);
@@ -17,6 +19,8 @@ var _submitRequest2 = _interopRequireDefault(_submitRequest);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var emptyProfile = require('./fixtures/profiles/no-requests');
 var singleRequest = require('./fixtures/profiles/single-request');
@@ -133,6 +137,13 @@ describe('replay', function () {
   });
 
   describe('default', function () {
+    var getConfig = function getConfig(profileName, dummyProfile) {
+      return { profileData: _defineProperty({}, profileName, function () {
+          return dummyProfile;
+        }) };
+    };
+    var profileName = 'demo';
+
     beforeEach(function () {
       jest.resetAllMocks();
       _fetchMock2.default.mock.mockImplementation(function () {
@@ -141,35 +152,40 @@ describe('replay', function () {
     });
 
     it('should mock requests for an empty profile', function () {
-      (0, _replay2.default)(emptyProfile, {});
+      var config = getConfig(profileName, emptyProfile);
+      (0, _replay2.default)(profileName, config);
 
       expect(_fetchMock2.default.reset).toBeCalled();
       expect(_fetchMock2.default.mock.mock.calls).toEqual([]);
     });
 
     it('should mock requests for a profile with a single request', function () {
-      (0, _replay2.default)(singleRequest, {});
+      var config = getConfig(profileName, singleRequest);
+      (0, _replay2.default)(profileName, config);
 
       expect(_fetchMock2.default.reset).toBeCalled();
       expect(_fetchMock2.default.mock.mock.calls).toMatchSnapshot();
     });
 
     it('should mock requests for a profile with two requests and the default repeat mode', function () {
-      (0, _replay2.default)(multipleRequests, {});
+      var config = getConfig(profileName, multipleRequests);
+      (0, _replay2.default)(profileName, config);
 
       expect(_fetchMock2.default.reset).toBeCalled();
       expect(_fetchMock2.default.mock.mock.calls).toMatchSnapshot();
     });
 
     it('should mock requests for a profile with two requests and a repeat mode of \'first\'', function () {
-      (0, _replay2.default)(multipleRequests, { repeatMode: 'first' });
+      var config = getConfig(profileName, multipleRequests);
+      (0, _replay2.default)(profileName, _extends({}, config, { repeatMode: 'first' }));
 
       expect(_fetchMock2.default.reset).toBeCalled();
       expect(_fetchMock2.default.mock.mock.calls).toMatchSnapshot();
     });
 
     it('should mock requests for a profile with two requests and a repeat mode of \'last\'', function () {
-      (0, _replay2.default)(multipleRequests, { repeatMode: 'last' });
+      var config = getConfig(profileName, multipleRequests);
+      (0, _replay2.default)(profileName, _extends({}, config, { repeatMode: 'last' }));
 
       expect(_fetchMock2.default.reset).toBeCalled();
       expect(_fetchMock2.default.mock.mock.calls).toMatchSnapshot();
@@ -182,13 +198,15 @@ describe('replay', function () {
         });
       });
 
-      (0, _replay2.default)(singleRequest, {});
+      var config = getConfig(profileName, singleRequest);
+      (0, _replay2.default)(profileName, config);
 
       expect(_fetchMock2.default.reset).toBeCalled();
       expect(_submitRequest2.default).not.toHaveBeenCalled();
     });
 
     it('should catch unmatched requests with debugging enabled', _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+      var config;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -199,24 +217,37 @@ describe('replay', function () {
                 });
               });
 
-              (0, _replay2.default)(singleRequest, { debuggingEnabled: true, debugPort: 9091 });
+              config = getConfig(profileName, singleRequest);
+
+              (0, _replay2.default)(profileName, _extends({}, config, { debuggingEnabled: true, debugPort: 9091 }));
 
               expect(_fetchMock2.default.reset).toBeCalled();
               _context.t0 = expect;
-              _context.next = 6;
+              _context.next = 7;
               return _submitRequest2.default.mock.calls;
 
-            case 6:
+            case 7:
               _context.t1 = _context.sent;
               (0, _context.t0)(_context.t1).toMatchSnapshot();
 
-            case 8:
+            case 9:
             case 'end':
               return _context.stop();
           }
         }
       }, _callee, undefined);
     })));
+
+    it('should throw exception if no profile is found', function () {
+      var newProfileName = 'demo-demo';
+      var replayProfile = function replayProfile() {
+        return (0, _replay2.default)(newProfileName, { profileData: _defineProperty({}, newProfileName, function () {
+            throw new Error();
+          }) });
+      };
+
+      expect(replayProfile).toThrow();
+    });
   });
 });
 //# sourceMappingURL=replay.test.js.map

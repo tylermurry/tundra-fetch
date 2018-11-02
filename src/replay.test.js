@@ -114,41 +114,49 @@ describe('replay', () => {
   });
 
   describe('default', () => {
+    const getConfig = (profileName, dummyProfile) => ({ profileData: { [profileName]: () => dummyProfile } });
+    const profileName = 'demo';
+
     beforeEach(() => {
       jest.resetAllMocks();
       fetchMock.mock.mockImplementation(() => ({ catch: jest.fn() }));
     });
 
     it('should mock requests for an empty profile', () => {
-      replay(emptyProfile, {});
+      const config = getConfig(profileName, emptyProfile);
+      replay(profileName, config);
 
       expect(fetchMock.reset).toBeCalled();
       expect(fetchMock.mock.mock.calls).toEqual([]);
     });
 
     it('should mock requests for a profile with a single request', () => {
-      replay(singleRequest, {});
+      const config = getConfig(profileName, singleRequest);
+      replay(profileName, config);
 
       expect(fetchMock.reset).toBeCalled();
       expect(fetchMock.mock.mock.calls).toMatchSnapshot();
     });
 
     it('should mock requests for a profile with two requests and the default repeat mode', () => {
-      replay(multipleRequests, {});
+      const config = getConfig(profileName, multipleRequests);
+      replay(profileName, config);
 
       expect(fetchMock.reset).toBeCalled();
       expect(fetchMock.mock.mock.calls).toMatchSnapshot();
     });
 
     it('should mock requests for a profile with two requests and a repeat mode of \'first\'', () => {
-      replay(multipleRequests, { repeatMode: 'first' });
+      const config = getConfig(profileName, multipleRequests);
+      replay(profileName, { ...config, repeatMode: 'first' });
 
       expect(fetchMock.reset).toBeCalled();
       expect(fetchMock.mock.mock.calls).toMatchSnapshot();
     });
 
     it('should mock requests for a profile with two requests and a repeat mode of \'last\'', () => {
-      replay(multipleRequests, { repeatMode: 'last' });
+      const config = getConfig(profileName, multipleRequests);
+      replay(profileName, { ...config, repeatMode: 'last' });
 
       expect(fetchMock.reset).toBeCalled();
       expect(fetchMock.mock.mock.calls).toMatchSnapshot();
@@ -157,7 +165,8 @@ describe('replay', () => {
     it('should catch unmatched requests without debugging enabled', () => {
       fetchMock.mock.mockImplementation(() => new Promise((response, reject) => reject(singleRequest[0].request)));
 
-      replay(singleRequest, {});
+      const config = getConfig(profileName, singleRequest);
+      replay(profileName, config);
 
       expect(fetchMock.reset).toBeCalled();
       expect(submitRequestData).not.toHaveBeenCalled();
@@ -166,10 +175,19 @@ describe('replay', () => {
     it('should catch unmatched requests with debugging enabled', async () => {
       fetchMock.mock.mockImplementation(() => new Promise((response, reject) => reject(singleRequest[0].request)));
 
-      replay(singleRequest, { debuggingEnabled: true, debugPort: 9091 });
+      const config = getConfig(profileName, singleRequest);
+      replay(profileName, { ...config, debuggingEnabled: true, debugPort: 9091 });
 
       expect(fetchMock.reset).toBeCalled();
       expect(await submitRequestData.mock.calls).toMatchSnapshot();
+    });
+
+    it('should throw exception if no profile is found', () => {
+      const newProfileName = 'demo-demo';
+      const replayProfile = () => replay(newProfileName,
+        { profileData: { [newProfileName]: () => { throw new Error(); } } });
+
+      expect(replayProfile).toThrow();
     });
   });
 });
