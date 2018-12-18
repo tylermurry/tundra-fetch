@@ -17,10 +17,10 @@ This client is built to intercept all uses of the fetch library and forward them
 
 ```javascript
 function someAppInitFunction() {
-    require('tundra-fetch').interceptFetchCalls(9090);
+    require('tundra-fetch').interceptFetchCalls();
 }
 ```
-Port `9090` in this case is completely configurable based on what port we start our server on.
+Intercepted calls are sent to `http://localhost:9091` by default but the port is configurable by specifying it in the first parameter - e.g.`interceptFetchCalls(9092)`.
 
 The idea is to only enable this code before running a manual test of the app, so *ensure that you remove this before going to production or is toggled off for a production build*
 
